@@ -17,3 +17,8 @@ class NotCorrectAuthData(IncidentsException):
 class UserAlreadyExists(IncidentsException):
     status_code = status.HTTP_409_CONFLICT
     detail = "Пользователь уже существует"
+
+
+class UserNotFound(IncidentsException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Пользователь не найден"

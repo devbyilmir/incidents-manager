@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Users(Base):
@@ -10,5 +11,8 @@ class Users(Base):
     role = Column(String, nullable=False, default="operator")
     hashed_password = Column(String, nullable=False)
 
+    incidents = relationship("Incident", back_populates="creator")
+
     def __str__(self):
-        return f"Пользователь {self.email}"
+        # return f"Пользователь {self.email}"
+        return f"Пользователь {self.name}"
