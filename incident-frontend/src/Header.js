@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Header = ({ user, onLogout }) => {
+const Header = ({ user, onLogout, onCreateIncident }) => {
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,9 +13,12 @@ const Header = ({ user, onLogout }) => {
               <a href="#incidents" className="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">
                 Инциденты
               </a>
-              <a href="#create" className="text-gray-500 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+              <button 
+                onClick={onCreateIncident}
+                className="text-gray-500 hover:text-blue-600 px-3 py-2 text-sm font-medium flex items-center gap-1"
+              >
                 Создать инцидент
-              </a>
+              </button>
             </nav>
           </div>
           

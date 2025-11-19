@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Login from './Login';
 import Header from './Header';
 import IncidentList from './IncidentList';
+import CreateIncidentModal from './CreateIncidentModal';
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
+  // Проверка авторизации
   const checkAuth = async () => {
     try {
       const response = await fetch('http://localhost:8000/auth/me', {
@@ -30,6 +30,7 @@ function App() {
     }
   };
 
+  // Выход из системы
   const handleLogout = async () => {
     try {
       await fetch('http://localhost:8000/auth/logout', {
@@ -43,6 +44,24 @@ function App() {
       setIsLoggedIn(false);
     }
   };
+
+  // Открытие модалки создания инцидента
+  const handleCreateIncident = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  // После создания инцидента
+  const handleIncidentCreated = (newIncident) => {
+  console.log('Новый инцидент создан:', newIncident);
+  setIsCreateModalOpen(false);
+    
+    // ТРИГГЕРИМ ОБНОВЛЕНИЕ СПИСКА!
+    setRefreshTrigger(prev => prev + 1);
+  };
+  
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
   if (loading) {
     return (
@@ -59,10 +78,20 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       {isLoggedIn ? (
         <>
-          <Header user={user} onLogout={handleLogout} />
+          <Header 
+            user={user} 
+            onLogout={handleLogout} 
+            onCreateIncident={handleCreateIncident}
+          />
           <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <IncidentList />
+            <IncidentList refreshTrigger={refreshTrigger} /> {/* ← Передаём триггер */}
           </main>
+          
+          <CreateIncidentModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onIncidentCreated={handleIncidentCreated}
+          />
         </>
       ) : (
         <Login onLogin={checkAuth} />

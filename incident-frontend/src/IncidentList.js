@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-const IncidentList = () => {
+const IncidentList = ({ refreshTrigger }) => {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedIncident, setSelectedIncident] = useState(null);
+  const [editingIncident, setEditingIncident] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
   useEffect(() => {
     fetchIncidents();
-  }, []);
+  }, [refreshTrigger]);
 
   const fetchIncidents = async () => {
     try {
@@ -58,8 +61,119 @@ const IncidentList = () => {
     }
   };
 
-  const getStatusIcon = (status) => {
-    return status === 'открыт' ? '🔓' : '🔒';
+  // ПРОСМОТР ДЕТАЛЕЙ
+  const handleViewDetails = (incident) => {
+    setSelectedIncident(incident);
+  };
+
+  // ЗАКРЫТИЕ ИНЦИДЕНТА
+  const handleCloseIncident = async (incidentId) => {
+    if (!window.confirm('Вы уверены, что хотите закрыть этот инцидент?')) return;
+    
+    try {
+      const response = await fetch(`http://localhost:8000/incidents/${incidentId}?status=закрыт`, {
+        method: 'PATCH',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        alert('Инцидент закрыт!');
+        fetchIncidents();
+      } else {
+        alert('Ошибка при закрытии инцидента');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка соединения с сервером');
+    }
+  };
+
+  // ОТКРЫТИЕ ИНЦИДЕНТА
+  const handleOpenIncident = async (incidentId) => {
+    try {
+      const response = await fetch(`http://localhost:8000/incidents/${incidentId}?status=открыт`, {
+        method: 'PATCH',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        alert('Инцидент открыт!');
+        fetchIncidents();
+      } else {
+        alert('Ошибка при открытии инцидента');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка соединения с сервером');
+    }
+  };
+
+  // УДАЛЕНИЕ ИНЦИДЕНТА
+  const handleDeleteIncident = async (incidentId) => {
+    if (!window.confirm('Вы уверены, что хотите удалить этот инцидент? Это действие нельзя отменить!')) return;
+    
+    try {
+      const response = await fetch(`http://localhost:8000/incidents/${incidentId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        alert('Инцидент удален!');
+        fetchIncidents();
+      } else {
+        alert('Ошибка при удалении инцидента');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка соединения с сервером');
+    }
+  };
+
+  // РЕДАКТИРОВАНИЕ ИНЦИДЕНТА
+  const handleEditIncident = (incident) => {
+    setEditingIncident(incident);
+    setEditForm({
+      title: incident.title,
+      description: incident.description,
+      type: incident.type,
+      priority: incident.priority,
+      location: incident.location
+    });
+  };
+
+  const handleUpdateIncident = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch(`http://localhost:8000/incidents/${editingIncident.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(editForm),
+      });
+      
+      if (response.ok) {
+        alert('Инцидент обновлен!');
+        setEditingIncident(null);
+        setEditForm({});
+        fetchIncidents();
+      } else {
+        alert('Ошибка при обновлении инцидента');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка соединения с сервером');
+    }
+  };
+
+  const handleEditChange = (e) => {
+    setEditForm({
+      ...editForm,
+      [e.target.name]: e.target.value
+    });
   };
 
   if (loading) return (
@@ -161,6 +275,188 @@ const IncidentList = () => {
         </div>
       </div>
 
+      {/* Модалка деталей инцидента */}
+      {selectedIncident && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-700 p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold text-white">📄 Детали инцидента</h2>
+                  <p className="text-blue-100 mt-1">Полная информация о нештатной ситуации</p>
+                </div>
+                <button 
+                  onClick={() => setSelectedIncident(null)}
+                  className="text-white hover:text-blue-200 text-2xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Заголовок</label>
+                <div className="text-lg font-semibold text-gray-900">{selectedIncident.title}</div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Описание</label>
+                <div className="text-gray-700 bg-gray-50 p-3 rounded-lg">{selectedIncident.description || 'Нет описания'}</div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Тип</label>
+                  <div className="font-medium">{selectedIncident.type}</div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Приоритет</label>
+                  <div className="font-medium">{selectedIncident.priority}</div>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Местоположение</label>
+                <div className="font-medium">{selectedIncident.location}</div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Статус</label>
+                  <div className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
+                    selectedIncident.status === 'открыт' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {selectedIncident.status}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Создатель</label>
+                  <div className="font-medium">{selectedIncident.creator?.name || 'Неизвестно'}</div>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Дата создания</label>
+                <div className="font-medium">
+                  {new Date(selectedIncident.created_at).toLocaleString('ru-RU')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модалка редактирования */}
+      {editingIncident && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-700 p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold text-white">✏️ Редактировать инцидент</h2>
+                  <p className="text-blue-100 mt-1">Внесите изменения в информацию об инциденте</p>
+                </div>
+                <button 
+                  onClick={() => setEditingIncident(null)}
+                  className="text-white hover:text-blue-200 text-2xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            
+            <form onSubmit={handleUpdateIncident} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Заголовок *</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={editForm.title}
+                  onChange={handleEditChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Описание</label>
+                <textarea
+                  name="description"
+                  value={editForm.description}
+                  onChange={handleEditChange}
+                  rows="3"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Тип</label>
+                  <select
+                    name="type"
+                    value={editForm.type}
+                    onChange={handleEditChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="утечка">Утечка</option>
+                    <option value="поломка">Поломка</option>
+                    <option value="сбой_автоматики">Сбой автоматики</option>
+                    <option value="загазованность">Загазованность</option>
+                    <option value="пожарная_опасность">Пожарная опасность</option>
+                    <option value="коррозия">Коррозия</option>
+                    <option value="другое">Другое</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Приоритет</label>
+                  <select
+                    name="priority"
+                    value={editForm.priority}
+                    onChange={handleEditChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="низкий">Низкий</option>
+                    <option value="средний">Средний</option>
+                    <option value="высокий">Высокий</option>
+                    <option value="критический">Критический</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Местоположение *</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={editForm.location}
+                  onChange={handleEditChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setEditingIncident(null)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 px-4 rounded-lg font-medium"
+                >
+                  Отмена
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-800"
+                >
+                  Сохранить
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Список инцидентов */}
       {filteredIncidents.length === 0 ? (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
@@ -243,7 +539,7 @@ const IncidentList = () => {
                       ? 'bg-green-50 text-green-700 border-green-200' 
                       : 'bg-gray-100 text-gray-700 border-gray-200'
                   }`}>
-                    {getStatusIcon(incident.status)} {incident.status}
+                    {incident.status === 'открыт' ? '🔓' : '🔒'} {incident.status}
                   </span>
                 </div>
 
@@ -279,18 +575,43 @@ const IncidentList = () => {
               {/* Ховер-действия */}
               <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <div className="flex justify-between items-center">
-                  <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+                  <button 
+                    onClick={() => handleViewDetails(incident)}
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+                  >
                     <span>👁️</span>
                     Подробнее
                   </button>
                   <div className="flex gap-2">
-                    <button className="text-gray-400 hover:text-green-600 transition-colors">
-                      ✅
-                    </button>
-                    <button className="text-gray-400 hover:text-blue-600 transition-colors">
+                    {incident.status === 'открыт' ? (
+                      <button 
+                        onClick={() => handleCloseIncident(incident.id)}
+                        className="text-gray-400 hover:text-green-600 transition-colors"
+                        title="Закрыть инцидент"
+                      >
+                        ✅
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => handleOpenIncident(incident.id)}
+                        className="text-gray-400 hover:text-green-600 transition-colors"
+                        title="Открыть инцидент"
+                      >
+                        🔓
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => handleEditIncident(incident)}
+                      className="text-gray-400 hover:text-blue-600 transition-colors"
+                      title="Редактировать"
+                    >
                       ✏️
                     </button>
-                    <button className="text-gray-400 hover:text-red-600 transition-colors">
+                    <button 
+                      onClick={() => handleDeleteIncident(incident.id)}
+                      className="text-gray-400 hover:text-red-600 transition-colors"
+                      title="Удалить"
+                    >
                       🗑️
                     </button>
                   </div>
