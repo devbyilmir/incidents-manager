@@ -18,19 +18,17 @@ router = APIRouter(prefix="/incidents", tags=["Incidents"])
 #     return incidents
 @router.get("/", response_model=list[schemas.IncidentResponse])
 async def get_all_incidents(
-    db: AsyncSession = Depends(get_db), 
-    current_user=Depends(get_current_user)
+    db: AsyncSession = Depends(get_db), current_user=Depends(get_current_user)
 ):
     result = await db.execute(
-        select(models.Incident)
-        .options(joinedload(models.Incident.creator))
+        select(models.Incident).options(joinedload(models.Incident.creator))
     )
     incidents = result.scalars().all()
-    
+
     # for incident in incidents:
     #     if incident.creator:
     #         incident.creator_name = incident.creator.name
-    
+
     return incidents
 
 
@@ -64,13 +62,14 @@ async def get_incidents_by_priority(
         .where(models.Incident.priority == priority)
     )
     incidents = result.scalars().all()
-    
+
     # Заполняем creator_name
     # for incident in incidents:
     #     if incident.creator:
     #         incident.creator_name = incident.creator.name
-    
+
     return incidents
+
 
 @router.get("/search/")
 async def search_incidents(
@@ -84,12 +83,12 @@ async def search_incidents(
         .where(models.Incident.location.contains(location))
     )
     incidents = result.scalars().all()
-    
+
     # Заполняем creator_name
     # for incident in incidents:
     #     if incident.creator:
     #         incident.creator_name = incident.creator.name
-    
+
     return incidents
 
 
@@ -105,7 +104,7 @@ async def search_incidents(
 #     await db.refresh(db_incident)
 #     return db_incident
 
-#тут
+# тут
 # @router.post("/", response_model=schemas.IncidentResponse)
 # async def create_incident(
 #     incident: schemas.IncidentCreate,
@@ -123,6 +122,7 @@ async def search_incidents(
 #         .where(models.Incident.id == db_incident.id)
 #     )
 #     incident_with_creator = result.scalar_one()
+
 
 #     return incident_with_creator
 @router.post("/", response_model=schemas.IncidentResponse)
@@ -143,10 +143,10 @@ async def create_incident(
         .where(models.Incident.id == db_incident.id)
     )
     incident_with_creator = result.scalar_one()
-    
+
     # ВРУЧНУЮ устанавливаем creator_name
     # incident_with_creator.creator_name = current_user.name
-    
+
     return incident_with_creator
 
 
