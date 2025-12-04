@@ -174,7 +174,6 @@ const IncidentList = ({ refreshTrigger }) => {
               onClick={fetchIncidents}
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition duration-200 flex items-center gap-2"
             >
-              <span>🔄</span>
               Обновить
             </button>
           </div>

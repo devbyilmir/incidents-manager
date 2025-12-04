@@ -23,6 +23,7 @@ class IncidentResponse(BaseModel):
     id: int
     title: str
     type: str
+    description: str
     priority: str
     status: str
     location: str

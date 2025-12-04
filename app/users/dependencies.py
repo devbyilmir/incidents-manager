@@ -6,8 +6,7 @@ from app.config import settings
 
 
 async def get_token_from_request(request: Request) -> str:
-    """Извлекает токен из куки или заголовка"""
-    # Меняем название куки на то, что вы используете в login
+
     token = request.cookies.get("incident_access_token")
 
     # Если нет в куках, пробуем из заголовка Authorization

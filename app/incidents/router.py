@@ -32,7 +32,7 @@ async def get_all_incidents(
     return incidents
 
 
-@router.get("/{incident_id}", response_model=schemas.IncidentResponse)  # ← ДОБАВЬ ЭТО
+@router.get("/{incident_id}", response_model=schemas.IncidentResponse)
 async def get_incident_by_id(
     incident_id: int,
     db: AsyncSession = Depends(get_db),
@@ -63,11 +63,6 @@ async def get_incidents_by_priority(
     )
     incidents = result.scalars().all()
 
-    # Заполняем creator_name
-    # for incident in incidents:
-    #     if incident.creator:
-    #         incident.creator_name = incident.creator.name
-
     return incidents
 
 
@@ -84,47 +79,9 @@ async def search_incidents(
     )
     incidents = result.scalars().all()
 
-    # Заполняем creator_name
-    # for incident in incidents:
-    #     if incident.creator:
-    #         incident.creator_name = incident.creator.name
-
     return incidents
 
 
-# @router.post("/", response_model=schemas.IncidentResponse)
-# async def create_incident(
-#     incident: schemas.IncidentCreate,
-#     db: AsyncSession = Depends(get_db),
-#     current_user=Depends(get_current_user),
-# ):
-#     db_incident = models.Incident(**incident.dict(), creator_id=current_user.id)
-#     db.add(db_incident)
-#     await db.commit()
-#     await db.refresh(db_incident)
-#     return db_incident
-
-# тут
-# @router.post("/", response_model=schemas.IncidentResponse)
-# async def create_incident(
-#     incident: schemas.IncidentCreate,
-#     db: AsyncSession = Depends(get_db),
-#     current_user=Depends(get_current_user),
-# ):
-#     db_incident = models.Incident(**incident.dict(), creator_id=current_user.id)
-#     db.add(db_incident)
-#     await db.commit()
-#     await db.refresh(db_incident)
-
-#     result = await db.execute(
-#         select(models.Incident)
-#         .options(joinedload(models.Incident.creator))
-#         .where(models.Incident.id == db_incident.id)
-#     )
-#     incident_with_creator = result.scalar_one()
-
-
-#     return incident_with_creator
 @router.post("/", response_model=schemas.IncidentResponse)
 async def create_incident(
     incident: schemas.IncidentCreate,
@@ -136,7 +93,6 @@ async def create_incident(
     await db.commit()
     await db.refresh(db_incident)
 
-    # Перезагружаем с joinedload
     result = await db.execute(
         select(models.Incident)
         .options(joinedload(models.Incident.creator))
@@ -144,32 +100,7 @@ async def create_incident(
     )
     incident_with_creator = result.scalar_one()
 
-    # ВРУЧНУЮ устанавливаем creator_name
-    # incident_with_creator.creator_name = current_user.name
-
     return incident_with_creator
-
-
-# @router.post("/", response_model=schemas.IncidentResponse)
-# async def create_incident(
-#     incident: schemas.IncidentCreate,
-#     db: AsyncSession = Depends(get_db),
-#     current_user=Depends(get_current_user),
-# ):
-#     print(f"current_user: {current_user}")  # ← Добавь для отладки
-#     print(f"current_user.id: {current_user.id if current_user else 'None'}")
-
-#     db_incident = models.Incident(
-#         **incident.dict(),
-#         creator_id=current_user.id  # ← Убедись, что здесь не None
-#     )
-
-#     db.add(db_incident)
-#     await db.commit()
-#     await db.refresh(db_incident)
-
-#     print(f"Создан инцидент с creator_id: {db_incident.creator_id}")  # ← Проверь
-#     return db_incident
 
 
 @router.patch("/{incident_id}")

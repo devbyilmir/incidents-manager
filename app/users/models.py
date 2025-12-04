@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class Users(Base):
     __tablename__ = "users"
 
@@ -14,5 +15,4 @@ class Users(Base):
     incidents = relationship("Incident", back_populates="creator")
 
     def __str__(self):
-        # return f"Пользователь {self.email}"
         return f"Пользователь {self.name}"

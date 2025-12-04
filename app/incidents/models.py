@@ -10,8 +10,8 @@ class Incident(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(Text)
-    type = Column(String)  # "утечка", "поломка", "авария"
-    priority = Column(String)  # "низкий", "средний", "высокий"
+    type = Column(String)
+    priority = Column(String)
     status = Column(String, default="открыт")
     location = Column(String)
     creator_id = Column(Integer, ForeignKey("users.id"))
