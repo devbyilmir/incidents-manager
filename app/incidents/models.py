@@ -12,10 +12,15 @@ class Incident(Base):
     description = Column(Text)
     type = Column(String)
     priority = Column(String)
+
+    risk_score = Column(Integer, default=0)
+    risk_level = Column(String, default="LOW")
+
     status = Column(String, default="открыт")
     location = Column(String)
     creator_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    closed_at = Column(DateTime(timezone=True), nullable=True)
 
     creator = relationship("Users", back_populates="incidents")
 

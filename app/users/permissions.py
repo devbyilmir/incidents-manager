@@ -1,0 +1,17 @@
+from fastapi import HTTPException
+
+
+def require_master_or_admin(user):
+    if user.role not in ["master", "admin"]:
+        raise HTTPException(
+            status_code=403,
+            detail="Недостаточно прав"
+        )
+
+
+def require_admin(user):
+    if user.role != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Недостаточно прав"
+        )

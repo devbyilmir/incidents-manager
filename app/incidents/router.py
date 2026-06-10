@@ -5,6 +5,10 @@ from sqlalchemy.orm import joinedload
 from app.database import get_db
 from app.incidents import models, schemas
 from app.users.dependencies import get_current_user
+from app.incidents.risk import calculate_risk
+from app.users.permissions import require_master_or_admin, require_admin
+from datetime import datetime
+
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
 
@@ -88,10 +92,16 @@ async def create_incident(
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    db_incident = models.Incident(**incident.dict(), creator_id=current_user.id)
-    db.add(db_incident)
-    await db.commit()
-    await db.refresh(db_incident)
+    risk_score, risk_level = calculate_risk(
+        incident.type, incident.priority, incident.location
+    )
+
+    db_incident = models.Incident(
+        **incident.dict(),
+        creator_id=current_user.id,
+        risk_score=risk_score,
+        risk_level=risk_level,
+    )
 
     result = await db.execute(
         select(models.Incident)
@@ -106,10 +116,12 @@ async def create_incident(
 @router.patch("/{incident_id}")
 async def update_incident_status(
     incident_id: int,
-    status: str,
+    status_data: schemas.IncidentStatusUpdate,
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    require_master_or_admin(current_user)
+
     result = await db.execute(
         select(models.Incident).where(models.Incident.id == incident_id)
     )
@@ -117,7 +129,11 @@ async def update_incident_status(
     if not incident:
         raise HTTPException(status_code=404, detail="Инцидент не найден")
 
-    incident.status = status
+    incident.status = status_data.status
+    
+    if incident.status == "закрыт":
+        incident.closed_at = datetime.utcnow()  # потом поменять на выбор даты, так как я могу закрыть сразу и это сломет логику
+
     await db.commit()
     await db.refresh(incident)
     return incident
@@ -129,6 +145,8 @@ async def delete_incident(
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    require_admin(current_user)
+
     result = await db.execute(
         select(models.Incident).where(models.Incident.id == incident_id)
     )
