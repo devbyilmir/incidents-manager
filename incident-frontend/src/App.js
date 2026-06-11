@@ -291,35 +291,7 @@ function App() {
 
           </nav>
 
-          <div className="mt-auto">
-            <div className="text-xs uppercase tracking-wider text-slate-400 mb-3">
-              Статистика
-            </div>
-
-            <div className="space-y-3">
-
-              <div className="bg-white/50 rounded-2xl p-3">
-                <div className="text-xs text-slate-500">
-                  Открытые
-                </div>
-
-                <div className="text-xl font-bold text-green-600">
-                  14
-                </div>
-              </div>
-
-              <div className="bg-white/50 rounded-2xl p-3">
-                <div className="text-xs text-slate-500">
-                  High Risk
-                </div>
-
-                <div className="text-xl font-bold text-red-600">
-                  10
-                </div>
-              </div>
-
-            </div>
-          </div>
+          
 
           <div className="mt-auto space-y-4">
 
