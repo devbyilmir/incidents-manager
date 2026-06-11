@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DashboardCharts from "./analytics/DashboardCharts";
+import DashboardCharts from "../analytics/DashboardCharts";
 import CountUp from "react-countup";
 
 const IncidentStats = () => {
@@ -36,8 +36,8 @@ const IncidentStats = () => {
                 }),
                 fetch(
                     'http://localhost:8000/incidents/stats/types', {
-                        credentials: 'include'
-                    }
+                    credentials: 'include'
+                }
                 ),
             ]);
 
@@ -77,7 +77,7 @@ const IncidentStats = () => {
                     shadow-xl
                     p-8
                 "
-                >
+            >
 
                 <div className="text-sm text-slate-500">
                     INCIDENT ANALYTICS

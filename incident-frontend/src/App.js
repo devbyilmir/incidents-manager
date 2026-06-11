@@ -5,6 +5,7 @@ import IncidentList from './components/incidents/IncidentList';
 import CreateIncidentModal from './CreateIncidentModal';
 import IncidentStats from './components/incidents/IncidentStats';
 import RecentActivity from './components/incidents/RecentActivity';
+import DashboardPage from './components/dashboard/DashboardPage';
 import './App.css';
 import {
   LayoutDashboard,
@@ -290,7 +291,7 @@ function App() {
 
           </nav>
 
-          <div className="mt-8">
+          <div className="mt-auto">
             <div className="text-xs uppercase tracking-wider text-slate-400 mb-3">
               Статистика
             </div>
@@ -318,73 +319,6 @@ function App() {
               </div>
 
             </div>
-          </div>
-
-          <div className="mb-6">
-
-            <div
-              className="
-                bg-white/60
-                backdrop-blur-xl
-                rounded-3xl
-                border
-                border-white/40
-                p-4
-              "
-            >
-
-              <div className="flex items-center gap-3">
-
-                <div
-                  className="
-                    w-12
-                    h-12
-                    rounded-2xl
-                    bg-gradient-to-br
-                    from-violet-500
-                    to-blue-500
-
-                    flex
-                    items-center
-                    justify-center
-
-                    text-white
-                    font-bold
-                  "
-                >
-                  {user?.name?.charAt(0)}
-                </div>
-
-                <div>
-
-                  <div className="font-semibold text-slate-900">
-                    {user?.name}
-                  </div>
-
-                  <div className="text-sm text-slate-500">
-                    Administrator
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* <div className="text-sm text-slate-500">
-                Administrator
-              </div> */}
-
-              <div className="mt-3 flex items-center gap-2">
-
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-
-                <span className="text-xs text-slate-500">
-                  Online
-                </span>
-
-              </div>
-
-            </div>
-
           </div>
 
           <div className="mt-auto space-y-4">
@@ -422,7 +356,7 @@ function App() {
 
           <main className="max-w-[1800px] mx-auto px-8 py-8">
             {activeTab === "dashboard" && (
-                <IncidentStats />
+                <DashboardPage />
             )}
 
             {activeTab === "incidents" && (

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import IncidentFilters from './IncidentFilters';
-import IncidentStats from './IncidentStats';
 import IncidentCard from './IncidentCard';
 import IncidentDetailsModal from './IncidentDetailsModal';
-import RecentActivity from './RecentActivity';
+
 
 const IncidentList = ({ refreshTrigger }) => {
   const [incidents, setIncidents] = useState([]);
@@ -137,20 +136,6 @@ const IncidentList = ({ refreshTrigger }) => {
         setFilter={setFilter}
         onRefresh={fetchIncidents}
       />
-
-      <div className="grid grid-cols-1 2xl:grid-cols-5 gap-6">
-
-        <div className="2xl:col-span-4">
-
-          <IncidentStats />
-
-        </div>
-
-        <div className="h-full">
-          <RecentActivity incidents={incidents} />
-        </div>
-
-      </div>
 
       {/* Модалка деталей инцидента */}
       <IncidentDetailsModal

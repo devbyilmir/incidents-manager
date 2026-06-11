@@ -50,57 +50,6 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
 
             </div>
 
-            {/* Навигация */}
-            <nav
-              className="
-                ml-10
-                flex
-                items-center
-                gap-2
-                bg-white/40
-                backdrop-blur-xl
-                rounded-2xl
-                p-2
-                border
-                border-white/50
-                shadow-sm
-                shadow-lg
-                shadow-slate-200/50
-              "
-            >
-              <a
-                href="#incidents"
-                className="
-                  px-4
-                  py-2
-                  rounded-xl
-                  bg-white
-                  shadow-sm
-                  text-sm
-                  font-medium
-                  text-gray-900
-                "
-              >
-                Инциденты
-              </a>
-
-              <button
-                onClick={onCreateIncident}
-                className="
-                  px-4
-                  py-2
-                  rounded-xl
-                  text-gray-600
-                  hover:bg-white
-                  hover:shadow-sm
-                  transition-all
-                  duration-200
-                "
-              >
-                Создать инцидент
-              </button>
-            </nav>
-
           </div>
 
           {/* Правая часть */}
@@ -142,6 +91,16 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                         ? 'Ответственный специалист'
                         : 'Оператор'}
                     </span>
+
+                    <div className="flex items-center gap-2 mt-1">
+
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+
+                      <span className="text-xs text-emerald-600 font-medium">
+                        Online
+                      </span>
+
+                    </div>
 
                   </div>
 
