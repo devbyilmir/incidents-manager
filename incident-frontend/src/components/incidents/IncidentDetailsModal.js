@@ -173,6 +173,34 @@ const IncidentDetailsModal = ({ selectedIncident, onClose }) => {
 
           </div>
 
+          {/* AI Recommendation */}
+
+          <div>
+
+              <label className="block text-sm font-medium text-violet-600 mb-2">
+                  AI Recommendation
+              </label>
+
+              <div
+                  className="
+                      bg-violet-50
+                      border
+                      border-violet-200
+                      rounded-2xl
+                      p-4
+                  "
+              >
+
+                  <div className="text-gray-700">
+
+                      {selectedIncident.recommendation}
+
+                  </div>
+
+              </div>
+
+          </div>
+
           {/* Карточки */}
           <div className="grid md:grid-cols-2 gap-4">
 

@@ -42,10 +42,10 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
         onIncidentCreated(newIncident);
         onClose();
 
-        // Принудительное обновление страницы
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
+        // // Принудительное обновление страницы
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 100);
 
       } else {
         const errorData = await response.json();
@@ -106,9 +106,38 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
         {/* Хедер */}
         <div className="p-6 border-b border-white/50">
           <div className="flex justify-between items-start">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">📝 Создать инцидент</h2>
-              <p className="text-gray-500 mt-1">Заполните информацию о новой нештатной ситуации</p>
+            <div className="flex items-center gap-4">
+
+              <div
+                className="
+                  w-12
+                  h-12
+                  rounded-2xl
+                  bg-gradient-to-br
+                  from-red-500
+                  to-orange-500
+                  flex
+                  items-center
+                  justify-center
+                  text-white
+                  shadow-lg
+                "
+              >
+                🚨
+              </div>
+
+              <div>
+
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Новый инцидент
+                </h2>
+
+                <p className="text-gray-500 mt-1">
+                  Регистрация нештатной ситуации
+                </p>
+
+              </div>
+
             </div>
             <button
               onClick={onClose}
@@ -148,7 +177,20 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
+              className="
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-200
+              hover:border-violet-300
+              rounded-2xl
+              focus:ring-2
+              focus:ring-violet-500
+              focus:border-transparent
+              transition-all
+              duration-200
+              "
               placeholder="Например: Обнаружена утечка нефти возле резервуара РВС-4"
               required
               disabled={loading}
@@ -164,7 +206,20 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
               value={formData.description}
               onChange={handleChange}
               rows="3"
-              className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
+              className="
+w-full
+px-4
+py-3
+border
+border-slate-200
+hover:border-violet-300
+rounded-2xl
+focus:ring-2
+focus:ring-violet-500
+focus:border-transparent
+transition-all
+duration-200
+"
               placeholder="Подробное описание ситуации..."
               disabled={loading}
             />
@@ -179,7 +234,20 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
+                className="
+w-full
+px-4
+py-3
+border
+border-slate-200
+hover:border-violet-300
+rounded-2xl
+focus:ring-2
+focus:ring-violet-500
+focus:border-transparent
+transition-all
+duration-200
+"
                 disabled={loading}
               >
                 <option value="утечка">🛢️ Утечка</option>
@@ -200,7 +268,20 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
                 name="priority"
                 value={formData.priority}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
+                className="
+w-full
+px-4
+py-3
+border
+border-slate-200
+hover:border-violet-300
+rounded-2xl
+focus:ring-2
+focus:ring-violet-500
+focus:border-transparent
+transition-all
+duration-200
+"
                 disabled={loading}
               >
                 <option value="низкий">🟢 Низкий</option>
@@ -225,7 +306,20 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
+              className="
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-200
+              hover:border-violet-300
+              rounded-2xl
+              focus:ring-2
+              focus:ring-violet-500
+              focus:border-transparent
+              transition-all
+              duration-200
+              "
               placeholder="Например: Резервуарный парк, РВС-10000"
               required
               disabled={loading}

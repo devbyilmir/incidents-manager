@@ -43,7 +43,7 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                 </h1>
 
                 <p className="text-xs text-gray-500">
-                  Incident Analytics Platform
+                  AI-Powered Analytics Platform
                 </p>
               </div>
 
@@ -56,13 +56,15 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                 flex
                 items-center
                 gap-2
-                bg-white/60
+                bg-white/40
                 backdrop-blur-xl
                 rounded-2xl
                 p-2
                 border
                 border-white/50
                 shadow-sm
+                shadow-lg
+                shadow-slate-200/50
               "
             >
               <a
@@ -105,17 +107,46 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
 
             {user && (
               <>
-                <div className="flex flex-col items-end">
-                  <span className="text-sm font-medium text-gray-800">
-                    Привет, {user.name}
-                  </span>
+                <div className="flex items-center gap-3">
 
-                  <span className="text-xs text-gray-500">
-                    Авторизованный пользователь
-                  </span>
+                  <div
+                    className="
+                      w-12
+                      h-12
+                      rounded-2xl
+                      bg-gradient-to-br
+                      from-violet-500
+                      to-blue-500
+                      text-white
+                      flex
+                      items-center
+                      justify-center
+                      font-semibold
+                      shadow-lg
+                    "
+                  >
+                    {user.name?.charAt(0)}
+                  </div>
+
+                  <div className="flex flex-col">
+
+                    <span className="text-sm font-semibold text-slate-900">
+                      {user.name}
+                    </span>
+
+                    <span className="text-xs text-slate-500">
+                      {user.role === 'admin'
+                        ? 'Администратор системы'
+                        : user.role === 'master'
+                        ? 'Ответственный специалист'
+                        : 'Оператор'}
+                    </span>
+
+                  </div>
+
                 </div>
 
-                <span
+                {/* <span
                   className="
                     px-4
                     py-2
@@ -130,26 +161,24 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                   "
                 >
                   {user.role}
-                </span>
+                </span> */}
 
                 <button
                   onClick={onLogout}
                   className="
-                    bg-white/80
-                    backdrop-blur-xl
-                    border
-                    border-white/50
-                    hover:shadow-lg
-                    px-4
-                    py-2
-                    rounded-2xl
-                    text-sm
-                    font-medium
-                    transition-all
-                    duration-300
+                  w-12
+                  h-12
+                  rounded-2xl
+                  bg-white/50
+                  backdrop-blur-xl
+                  border
+                  border-white/50
+                  hover:bg-white
+                  hover:shadow-lg
+                  transition-all
                   "
                 >
-                  Выйти
+                  ↗
                 </button>
               </>
             )}

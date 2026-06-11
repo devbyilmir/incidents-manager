@@ -177,13 +177,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
 
           <div className="text-sm text-gray-700">
 
-            {
-              incident.risk_score >= 150
-                ? 'Рекомендуется немедленная проверка оборудования'
-                : incident.risk_score >= 100
-                ? 'Требуется контроль ответственного специалиста'
-                : 'Плановый мониторинг состояния объекта'
-            }
+            {incident.recommendation}
 
           </div>
 

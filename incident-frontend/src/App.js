@@ -70,6 +70,25 @@ const useIncidents = () => {
 };
 
 function App() {
+  const [mousePosition, setMousePosition] = useState({
+      x: 0,
+      y: 0,
+    });
+
+    useEffect(() => {
+      const handleMouseMove = (e) => {
+        setMousePosition({
+          x: e.clientX,
+          y: e.clientY,
+        });
+      };
+
+      window.addEventListener("mousemove", handleMouseMove);
+
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+      };
+    }, []);
   const { isLoggedIn, user, loading, checkAuth, logout } = useAuth();
   const { 
     isCreateModalOpen, 
@@ -92,16 +111,190 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header 
-        user={user} 
-        onLogout={logout} 
-        onCreateIncident={openCreateModal}
+    <div className="min-h-screen relative overflow-hidden">
+
+      {/* Background */}
+
+      <div
+        className="
+          absolute
+          w-[800px]
+          h-[800px]
+          rounded-full
+          bg-violet-400/15
+          blur-[180px]
+          transition-transform
+          duration-500
+        "
+        style={{
+          left: -250 + mousePosition.x * 0.02,
+          top: -250 + mousePosition.y * 0.02,
+        }}
       />
-      
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <IncidentList refreshTrigger={refreshTrigger} />
-      </main>
+
+      <div
+        className="
+          absolute
+          w-[700px]
+          h-[700px]
+          rounded-full
+          bg-blue-400/15
+          blur-[180px]
+          transition-transform
+          duration-500
+        "
+        style={{
+          right: -250 - mousePosition.x * 0.02,
+          top: 100 + mousePosition.y * 0.01,
+        }}
+      />
+
+      <div
+        className="
+          absolute
+          w-[600px]
+          h-[600px]
+          rounded-full
+          bg-pink-400/10
+          blur-[180px]
+          transition-transform
+          duration-500
+        "
+        style={{
+          left: 500 + mousePosition.x * 0.01,
+          bottom: -250 - mousePosition.y * 0.02,
+        }}
+      />
+
+
+      <div className="flex min-h-screen">
+
+        {/* SIDEBAR */}
+
+        <aside
+          className="
+            w-72
+            border-r
+            border-white/40
+            bg-white/40
+            backdrop-blur-2xl
+            sticky
+            top-0
+            h-screen
+            p-6
+            hidden
+            xl:flex
+            flex-col
+          "
+        >
+
+          <div className="mb-10">
+
+            <h2 className="text-2xl font-bold text-slate-900">
+              Incident AI
+            </h2>
+
+            <p className="text-sm text-slate-500 mt-1">
+              Analytics Platform
+            </p>
+
+          </div>
+
+          <nav className="space-y-2">
+
+            <button
+              className="
+                w-full
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-2xl
+                bg-white
+                shadow-md
+                text-slate-900
+              "
+            >
+              Dashboard
+            </button>
+
+            <button
+              className="
+                w-full
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-2xl
+                text-slate-500
+                hover:bg-white/70
+              "
+            >
+              Incidents
+            </button>
+
+            <button
+              className="
+                w-full
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-2xl
+                text-slate-500
+                hover:bg-white/70
+              "
+            >
+              Analytics
+            </button>
+
+          </nav>
+
+          <div className="mt-auto">
+
+            <button
+              onClick={openCreateModal}
+              className="
+                w-full
+                py-4
+                rounded-2xl
+                bg-gradient-to-r
+                from-violet-600
+                to-blue-600
+                text-white
+                font-semibold
+                shadow-xl
+              "
+            >
+              Новый инцидент
+            </button>
+
+          </div>
+
+        </aside>
+
+        {/* CONTENT */}
+
+        <div className="flex-1">
+
+          <Header
+            user={user}
+            onLogout={logout}
+            onCreateIncident={openCreateModal}
+          />
+
+          <main className="max-w-[1500px] mx-auto px-8 py-8">
+
+            <IncidentList refreshTrigger={refreshTrigger} />
+
+          </main>
+
+        </div>
+
+      </div>
       
       <CreateIncidentModal
         isOpen={isCreateModalOpen}
