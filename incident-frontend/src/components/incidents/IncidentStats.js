@@ -67,11 +67,6 @@ const IncidentStats = () => {
 
     return (
         <div className="space-y-4">
-            <DashboardCharts
-                riskDistribution={riskDistribution}
-                incidentTypes={incidentTypes}
-            />
-
             <div
                 className="
                     bg-white/60
@@ -79,14 +74,13 @@ const IncidentStats = () => {
                     rounded-3xl
                     border
                     border-white/40
-                    p-8
                     shadow-xl
-                    mb-4
+                    p-8
                 "
-            >
+                >
 
                 <div className="text-sm text-slate-500">
-                    Incident Analytics
+                    INCIDENT ANALYTICS
                 </div>
 
                 <h1 className="text-4xl font-bold text-slate-900 mt-2">
@@ -94,10 +88,14 @@ const IncidentStats = () => {
                 </h1>
 
                 <p className="text-slate-500 mt-3">
-                    Мониторинг инцидентов, рисков и производственной безопасности.
+                    Мониторинг производственной безопасности и инцидентов.
                 </p>
 
             </div>
+            <DashboardCharts
+                riskDistribution={riskDistribution}
+                incidentTypes={incidentTypes}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 

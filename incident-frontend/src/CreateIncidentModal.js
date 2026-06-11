@@ -207,19 +207,19 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
               onChange={handleChange}
               rows="3"
               className="
-w-full
-px-4
-py-3
-border
-border-slate-200
-hover:border-violet-300
-rounded-2xl
-focus:ring-2
-focus:ring-violet-500
-focus:border-transparent
-transition-all
-duration-200
-"
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-200
+              hover:border-violet-300
+              rounded-2xl
+              focus:ring-2
+              focus:ring-violet-500
+              focus:border-transparent
+              transition-all
+              duration-200
+              "
               placeholder="Подробное описание ситуации..."
               disabled={loading}
             />
@@ -235,19 +235,19 @@ duration-200
                 value={formData.type}
                 onChange={handleChange}
                 className="
-w-full
-px-4
-py-3
-border
-border-slate-200
-hover:border-violet-300
-rounded-2xl
-focus:ring-2
-focus:ring-violet-500
-focus:border-transparent
-transition-all
-duration-200
-"
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-200
+              hover:border-violet-300
+              rounded-2xl
+              focus:ring-2
+              focus:ring-violet-500
+              focus:border-transparent
+              transition-all
+              duration-200
+              "
                 disabled={loading}
               >
                 <option value="утечка">🛢️ Утечка</option>
@@ -269,19 +269,19 @@ duration-200
                 value={formData.priority}
                 onChange={handleChange}
                 className="
-w-full
-px-4
-py-3
-border
-border-slate-200
-hover:border-violet-300
-rounded-2xl
-focus:ring-2
-focus:ring-violet-500
-focus:border-transparent
-transition-all
-duration-200
-"
+              w-full
+              px-4
+              py-3
+              border
+              border-slate-200
+              hover:border-violet-300
+              rounded-2xl
+              focus:ring-2
+              focus:ring-violet-500
+              focus:border-transparent
+              transition-all
+              duration-200
+              "
                 disabled={loading}
               >
                 <option value="низкий">🟢 Низкий</option>
