@@ -254,7 +254,7 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
                 </>
               ) : (
                 <>
-                  <span>✅</span>
+                  {/* <span>✅</span> */}
                   Создать инцидент
                 </>
               )}

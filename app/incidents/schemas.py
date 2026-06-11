@@ -76,6 +76,7 @@ class IncidentResponse(BaseModel):
 
     risk_score: int
     risk_level: str
+    recommendation: str | None = None
 
     status: IncidentStatus
     location: str

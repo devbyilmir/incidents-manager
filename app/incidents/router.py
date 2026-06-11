@@ -7,19 +7,13 @@ from app.incidents import models, schemas
 from app.users.dependencies import get_current_user
 from app.incidents.risk import calculate_risk
 from app.users.permissions import require_master_or_admin, require_admin
+from app.incidents.recommendations import get_recommendation
 from datetime import datetime
 
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
 
 
-# @router.get("/", response_model=list[schemas.IncidentResponse])
-# async def get_all_incidents(
-#     db: AsyncSession = Depends(get_db), current_user=Depends(get_current_user)
-# ):
-#     result = await db.execute(select(models.Incident))
-#     incidents = result.scalars().all()
-#     return incidents
 @router.get("/", response_model=list[schemas.IncidentResponse])
 async def get_all_incidents(
     db: AsyncSession = Depends(get_db), current_user=Depends(get_current_user)
@@ -29,11 +23,15 @@ async def get_all_incidents(
     )
     incidents = result.scalars().all()
 
-    # for incident in incidents:
-    #     if incident.creator:
-    #         incident.creator_name = incident.creator.name
+    response = []
 
-    return incidents
+    for incident in incidents:
+
+        incident.recommendation = get_recommendation(incident.risk_score)
+
+        response.append(incident)
+
+    return response
 
 
 @router.get("/stats", response_model=schemas.IncidentStats)
@@ -154,21 +152,16 @@ async def get_resolution_time_stats(
             func.avg(
                 func.extract(
                     "epoch",
-                    models.Incident.closed_at
-                    - models.Incident.created_at,
+                    models.Incident.closed_at - models.Incident.created_at,
                 )
             )
-        ).where(
-            models.Incident.closed_at.is_not(None)
-        )
+        ).where(models.Incident.closed_at.is_not(None))
     )
 
     avg_seconds = result.scalar()
 
     if not avg_seconds:
-        return {
-            "average_hours": 0
-        }
+        return {"average_hours": 0}
 
     return {
         "average_hours": round(
@@ -192,9 +185,7 @@ async def get_risk_distribution(
             func.count(models.Incident.id).label("count"),
         )
         .group_by(models.Incident.risk_level)
-        .order_by(
-            func.count(models.Incident.id).desc()
-        )
+        .order_by(func.count(models.Incident.id).desc())
     )
 
     rows = result.all()
@@ -215,9 +206,7 @@ async def recalculate_risks(
 ):
     require_admin(current_user)
 
-    result = await db.execute(
-        select(models.Incident)
-    )
+    result = await db.execute(select(models.Incident))
 
     incidents = result.scalars().all()
 
@@ -257,6 +246,8 @@ async def get_incident_by_id(
 
     if not incident:
         raise HTTPException(status_code=404, detail="Инцидент не найден")
+
+    incident.recommendation = get_recommendation(incident.risk_score)
 
     return incident
 
@@ -304,6 +295,7 @@ async def create_incident(
         incident.priority.value,
         incident.location,
     )
+    recommendation = get_recommendation(risk_score)
 
     db_incident = models.Incident(
         **incident.dict(),
@@ -323,7 +315,9 @@ async def create_incident(
     )
 
     incident_with_creator = result.scalar_one_or_none()
-
+    incident_with_creator.recommendation = get_recommendation(
+        incident_with_creator.risk_score
+    )
     return incident_with_creator
 
 

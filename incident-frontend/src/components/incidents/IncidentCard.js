@@ -158,6 +158,37 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
 
         </div>
 
+        {/* AI Recommendation */}
+
+        <div
+          className="
+            mb-4
+            rounded-2xl
+            border
+            border-violet-200
+            bg-violet-50
+            p-3
+          "
+        >
+
+          <div className="text-xs font-semibold text-violet-600 mb-1">
+            AI Recommendation
+          </div>
+
+          <div className="text-sm text-gray-700">
+
+            {
+              incident.risk_score >= 150
+                ? 'Рекомендуется немедленная проверка оборудования'
+                : incident.risk_score >= 100
+                ? 'Требуется контроль ответственного специалиста'
+                : 'Плановый мониторинг состояния объекта'
+            }
+
+          </div>
+
+        </div>
+
         {/* Локация */}
         <div
           className="

@@ -59,8 +59,14 @@ const IncidentStats = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
-                    <div className="text-2xl font-bold">
+                <div className="bg-white/70
+                        backdrop-blur-xl
+                        rounded-3xl
+                        border
+                        border-white/50
+                        shadow-lg
+                        p-5">
+                    <div className="text-4xl font-bold">
                         {stats.total}
                     </div>
                     <div className="text-gray-500 text-sm">
@@ -68,8 +74,14 @@ const IncidentStats = () => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
-                    <div className="text-2xl font-bold text-green-600">
+                <div className="bg-white/70
+                        backdrop-blur-xl
+                        rounded-3xl
+                        border
+                        border-white/50
+                        shadow-lg
+                        p-5">
+                    <div className="text-4xl font-bold text-green-600">
                         {stats.open}
                     </div>
                     <div className="text-gray-500 text-sm">
@@ -77,8 +89,14 @@ const IncidentStats = () => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
-                    <div className="text-2xl font-bold text-blue-600">
+                <div className="bg-white/70
+                        backdrop-blur-xl
+                        rounded-3xl
+                        border
+                        border-white/50
+                        shadow-lg
+                        p-5">
+                    <div className="text-4xl font-bold text-blue-600">
                         {stats.in_progress}
                     </div>
                     <div className="text-gray-500 text-sm">
@@ -86,8 +104,14 @@ const IncidentStats = () => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
-                    <div className="text-2xl font-bold text-gray-700">
+                <div className="bg-white/70
+                        backdrop-blur-xl
+                        rounded-3xl
+                        border
+                        border-white/50
+                        shadow-lg
+                        p-5">
+                    <div className="text-4xl font-bold text-gray-700">
                         {stats.closed}
                     </div>
                     <div className="text-gray-500 text-sm">
@@ -95,8 +119,14 @@ const IncidentStats = () => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
-                    <div className="text-2xl font-bold text-red-600">
+                <div className="bg-white/70
+                        backdrop-blur-xl
+                        rounded-3xl
+                        border
+                        border-white/50
+                        shadow-lg
+                        p-5">
+                    <div className="text-4xl font-bold text-red-600">
                         {highRisk}
                     </div>
                     <div className="text-gray-500 text-sm">
@@ -108,51 +138,139 @@ const IncidentStats = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
+                <div className="
+                    bg-white/70
+                    backdrop-blur-xl
+                    rounded-3xl
+                    border
+                    border-white/50
+                    shadow-lg
+                    p-6
+                ">
                     <div className="text-lg font-semibold mb-2">
                         Средний риск
                     </div>
 
-                    <div className="text-3xl font-bold text-orange-600">
+                    <div className="text-4xl font-bold text-orange-600">
                         {stats.average_risk}
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
+                <div className="
+                    bg-white/70
+                    backdrop-blur-xl
+                    rounded-3xl
+                    border
+                    border-white/50
+                    shadow-lg
+                    p-6
+                ">
                     <div className="text-lg font-semibold mb-2">
                         Среднее время решения
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
-
-                        <div className="text-lg font-semibold mb-4">
-                            🔥 ТОП проблемных локаций
-                        </div>
-
-                        <div className="space-y-2">
-
-                            {locations.slice(0, 5).map((location, index) => (
-                                <div
-                                    key={index}
-                                    className="flex justify-between border-b pb-2"
-                                >
-                                    <span>
-                                        {location.location}
-                                    </span>
-
-                                    <span className="font-bold text-red-600">
-                                        {location.count}
-                                    </span>
-                                </div>
-                            ))}
-
-                        </div>
-
-                    </div>
-
-                    <div className="text-3xl font-bold text-indigo-600">
+                    <div className="text-4xl font-bold text-indigo-600">
                         {resolution?.average_hours || 0} ч
                     </div>
+                </div>
+
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                {/* Risk Distribution */}
+
+                <div className="
+                    bg-white/70
+                    backdrop-blur-xl
+                    rounded-3xl
+                    border
+                    border-white/50
+                    shadow-lg
+                    p-6
+                ">
+
+                    <div className="text-lg font-semibold mb-4">
+                        📊 Распределение рисков
+                    </div>
+
+                    <div className="space-y-3">
+
+                        {riskDistribution.map((risk, index) => (
+
+                            <div
+                                key={index}
+                                className="flex justify-between items-center"
+                            >
+
+                                <span>
+                                    {risk.risk_level}
+                                </span>
+
+                                <span
+                                    className={`
+                                        px-3
+                                        py-1
+                                        rounded-xl
+                                        font-bold
+
+                                        ${risk.risk_level === 'HIGH'
+                                            ? 'bg-red-100 text-red-700'
+                                            : risk.risk_level === 'MEDIUM'
+                                                ? 'bg-yellow-100 text-yellow-700'
+                                                : 'bg-green-100 text-green-700'
+                                        }
+                                    `}
+                                >
+                                    {risk.count}
+                                </span>
+
+                            </div>
+
+                        ))}
+
+                    </div>
+
+                </div>
+
+                {/* Locations */}
+
+                <div className="
+                    bg-white/70
+                    backdrop-blur-xl
+                    rounded-3xl
+                    border
+                    border-white/50
+                    shadow-lg
+                    p-6
+                ">
+
+                    <div className="text-lg font-semibold mb-4">
+                        🔥 ТОП проблемных локаций
+                    </div>
+
+                    <div className="space-y-3">
+
+                        {locations.slice(0, 5).map((location, index) => (
+
+                            <div
+                                key={index}
+                                className="flex justify-between"
+                            >
+                                <span>
+                                    {location.location}
+                                </span>
+
+                                <span className="font-bold text-red-600">
+                                    {location.count}
+                                </span>
+
+                            </div>
+
+                        ))}
+
+                    </div>
+
                 </div>
 
             </div>
