@@ -133,52 +133,57 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
 
         </div>
 
-        {/* Risk Score */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex justify-between items-center mb-5">
+
+          <div>
+
+            <div
+              className={`
+                text-xs
+                uppercase
+                tracking-wider
+                font-semibold
+
+                ${
+                  incident.risk_level === "HIGH"
+                    ? "text-red-500"
+                    : incident.risk_level === "MEDIUM"
+                    ? "text-amber-500"
+                    : "text-emerald-500"
+                }
+              `}
+            >
+              Risk Level
+            </div>
+
+            <div className="text-3xl font-bold text-slate-900">
+              {incident.risk_score}
+            </div>
+
+          </div>
 
           <div
             className={`
-              px-3
-              py-1
-              rounded-xl
-              text-xs
-              font-semibold
+              w-16
+              h-16
+              rounded-full
+              flex
+              items-center
+              justify-center
+              font-bold
+              text-sm
+              border-4
 
               ${
-                incident.risk_level === 'HIGH'
-                  ? 'bg-red-100 text-red-700'
-                  : incident.risk_level === 'MEDIUM'
-                  ? 'bg-yellow-100 text-yellow-700'
-                  : 'bg-green-100 text-green-700'
+                incident.risk_level === "HIGH"
+                  ? "border-red-400 text-red-600"
+                  : incident.risk_level === "MEDIUM"
+                  ? "border-yellow-400 text-yellow-600"
+                  : "border-green-400 text-green-600"
               }
             `}
           >
-            Risk Score: {incident.risk_score}
-          </div>
-
-        </div>
-
-        {/* AI Recommendation */}
-
-        <div
-          className="
-            mb-4
-            rounded-2xl
-            border
-            border-violet-200
-            bg-violet-50
-            p-3
-          "
-        >
-
-          <div className="text-xs font-semibold text-violet-600 mb-1">
-            AI Recommendation
-          </div>
-
-          <div className="text-sm text-gray-700">
-
-            {incident.recommendation}
-
+            {incident.risk_level}
           </div>
 
         </div>
