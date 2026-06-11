@@ -146,12 +146,8 @@ const IncidentList = ({ refreshTrigger }) => {
 
         </div>
 
-        <div>
-
-          <RecentActivity
-            incidents={incidents}
-          />
-
+        <div className="h-full">
+          <RecentActivity incidents={incidents} />
         </div>
 
       </div>

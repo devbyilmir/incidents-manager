@@ -3,12 +3,15 @@ import Login from './Login';
 import Header from './Header';
 import IncidentList from './components/incidents/IncidentList';
 import CreateIncidentModal from './CreateIncidentModal';
+import IncidentStats from './components/incidents/IncidentStats';
+import RecentActivity from './components/incidents/RecentActivity';
 import './App.css';
 import {
   LayoutDashboard,
   ShieldAlert,
   BarChart3
 } from "lucide-react";
+
 
 // Кастомный хук для авторизации
 const useAuth = () => {
@@ -182,7 +185,7 @@ function App() {
             top-0
             bottom-0
 
-            w-80
+            w-64
 
             border-r
             border-white/40
@@ -287,6 +290,36 @@ function App() {
 
           </nav>
 
+          <div className="mt-8">
+            <div className="text-xs uppercase tracking-wider text-slate-400 mb-3">
+              Статистика
+            </div>
+
+            <div className="space-y-3">
+
+              <div className="bg-white/50 rounded-2xl p-3">
+                <div className="text-xs text-slate-500">
+                  Открытые
+                </div>
+
+                <div className="text-xl font-bold text-green-600">
+                  14
+                </div>
+              </div>
+
+              <div className="bg-white/50 rounded-2xl p-3">
+                <div className="text-xs text-slate-500">
+                  High Risk
+                </div>
+
+                <div className="text-xl font-bold text-red-600">
+                  10
+                </div>
+              </div>
+
+            </div>
+          </div>
+
           <div className="mb-6">
 
             <div
@@ -379,7 +412,7 @@ function App() {
 
         {/* CONTENT */}
 
-        <div className="flex-1 ml-80">
+        <div className="flex-1 ml-64">
 
           <Header
             user={user}
@@ -389,17 +422,15 @@ function App() {
 
           <main className="max-w-[1800px] mx-auto px-8 py-8">
             {activeTab === "dashboard" && (
-              <IncidentList refreshTrigger={refreshTrigger} />
+                <IncidentStats />
             )}
 
             {activeTab === "incidents" && (
-              <IncidentList refreshTrigger={refreshTrigger} />
+                <IncidentList refreshTrigger={refreshTrigger} />
             )}
 
             {activeTab === "analytics" && (
-              <div className="text-4xl font-bold">
-                Analytics
-              </div>
+                <IncidentStats />
             )}
 
           </main>

@@ -83,7 +83,7 @@ const IncidentStats = () => {
                     INCIDENT ANALYTICS
                 </div>
 
-                <h1 className="text-4xl font-bold text-slate-900 mt-2">
+                <h1 className="text-3xl font-bold text-slate-900 mt-2">
                     Operations Dashboard
                 </h1>
 
@@ -114,7 +114,7 @@ const IncidentStats = () => {
                         duration-300
                     "
                 >
-                    <div className="text-4xl font-bold text-slate-900">
+                    <div className="text-3xl font-bold text-slate-900">
                         <CountUp
                             end={stats.total}
                             duration={1.5}
@@ -143,7 +143,7 @@ const IncidentStats = () => {
                         duration-300
                     "
                 >
-                    <div className="text-4xl font-bold text-green-600">
+                    <div className="text-3xl font-bold text-green-600">
                         <CountUp
                             end={stats.open}
                             duration={1.5}
@@ -172,7 +172,7 @@ const IncidentStats = () => {
                         duration-300
                     "
                 >
-                    <div className="text-4xl font-bold text-blue-600">
+                    <div className="text-3xl font-bold text-blue-600">
                         <CountUp
                             end={stats.in_progress}
                             duration={1.5}
@@ -201,7 +201,7 @@ const IncidentStats = () => {
                         duration-300
                     "
                 >
-                    <div className="text-4xl font-bold text-gray-700">
+                    <div className="text-3xl font-bold text-gray-700">
                         <CountUp
                             end={stats.closed}
                             duration={1.5}
@@ -230,7 +230,7 @@ const IncidentStats = () => {
                         duration-300
                     "
                 >
-                    <div className="text-4xl font-bold text-red-600">
+                    <div className="text-3xl font-bold text-red-600">
                         <CountUp
                             end={highRisk}
                             duration={1.5}
@@ -261,7 +261,7 @@ const IncidentStats = () => {
                         Средний риск
                     </div>
 
-                    <div className="text-4xl font-bold text-orange-600">
+                    <div className="text-3xl font-bold text-orange-600">
                         {stats.average_risk}
                     </div>
                 </div>
@@ -279,7 +279,7 @@ const IncidentStats = () => {
                         Среднее время решения
                     </div>
 
-                    <div className="text-4xl font-bold text-indigo-600">
+                    <div className="text-3xl font-bold text-indigo-600">
                         {resolution?.average_hours || 0} ч
                     </div>
                 </div>

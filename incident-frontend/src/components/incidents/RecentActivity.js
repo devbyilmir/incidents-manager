@@ -1,9 +1,10 @@
 import React from "react";
 
-const RecentActivity = ({ incidents }) => {
+const RecentActivity = ({ incidents = [] }) => {
   return (
     <div
       className="
+        h-full
         bg-white/60
         backdrop-blur-2xl
         rounded-3xl
