@@ -4,6 +4,10 @@ const RecentActivity = ({ incidents = [] }) => {
   return (
     <div
       className="
+        max-h-[700px]
+        overflow-y-auto
+        sticky
+        top-24
         h-full
         bg-white/60
         backdrop-blur-2xl
