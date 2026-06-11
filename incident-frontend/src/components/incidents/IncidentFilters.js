@@ -5,7 +5,7 @@ const IncidentFilters = ({ searchTerm, setSearchTerm, filter, setFilter, onRefre
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">📋 Все инциденты</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Все инциденты</h1>
           <p className="text-gray-600 mt-1">Управление нештатными ситуациями на нефтебазе</p>
         </div>
         

@@ -3,7 +3,15 @@ import Login from './Login';
 import Header from './Header';
 import IncidentList from './components/incidents/IncidentList';
 import CreateIncidentModal from './CreateIncidentModal';
+import IncidentStats from './components/incidents/IncidentStats';
+import RecentActivity from './components/incidents/RecentActivity';
 import './App.css';
+import {
+  LayoutDashboard,
+  ShieldAlert,
+  BarChart3
+} from "lucide-react";
+
 
 // Кастомный хук для авторизации
 const useAuth = () => {
@@ -71,31 +79,33 @@ const useIncidents = () => {
 
 function App() {
   const [mousePosition, setMousePosition] = useState({
-      x: 0,
-      y: 0,
-    });
+    x: 0,
+    y: 0,
+  });
+  const [activeTab, setActiveTab] = useState("dashboard");
 
-    useEffect(() => {
-      const handleMouseMove = (e) => {
-        setMousePosition({
-          x: e.clientX,
-          y: e.clientY,
-        });
-      };
 
-      window.addEventListener("mousemove", handleMouseMove);
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: e.clientX,
+        y: e.clientY,
+      });
+    };
 
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-      };
-    }, []);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
   const { isLoggedIn, user, loading, checkAuth, logout } = useAuth();
-  const { 
-    isCreateModalOpen, 
-    refreshTrigger, 
-    openCreateModal, 
-    closeCreateModal, 
-    handleIncidentCreated 
+  const {
+    isCreateModalOpen,
+    refreshTrigger,
+    openCreateModal,
+    closeCreateModal,
+    handleIncidentCreated
   } = useIncidents();
 
   useEffect(() => {
@@ -166,27 +176,34 @@ function App() {
         }}
       />
 
-
+      {/* <div className="flex"> */}
       <div className="flex min-h-screen">
-
-        {/* SIDEBAR */}
-
         <aside
           className="
-            w-72
+            fixed
+            left-0
+            top-0
+            bottom-0
+
+            w-64
+
             border-r
             border-white/40
+
             bg-white/40
-            backdrop-blur-2xl
-            sticky
-            top-0
-            h-screen
+            backdrop-blur-3xl
+
             p-6
+
             hidden
             xl:flex
             flex-col
+
+            overflow-y-auto
           "
         >
+
+          {/* SIDEBAR */}
 
           <div className="mb-10">
 
@@ -203,7 +220,8 @@ function App() {
           <nav className="space-y-2">
 
             <button
-              className="
+              onClick={() => setActiveTab("dashboard")}
+              className={`
                 w-full
                 flex
                 items-center
@@ -211,16 +229,22 @@ function App() {
                 px-4
                 py-3
                 rounded-2xl
-                bg-white
-                shadow-md
-                text-slate-900
-              "
+                transition-all
+                duration-300
+
+                ${activeTab === "dashboard"
+                  ? "bg-white shadow-lg text-slate-900"
+                  : "text-slate-500 hover:bg-white/60"
+                }
+              `}
             >
+              <LayoutDashboard size={18} />
               Dashboard
             </button>
 
             <button
-              className="
+              onClick={() => setActiveTab("incidents")}
+              className={`
                 w-full
                 flex
                 items-center
@@ -228,15 +252,22 @@ function App() {
                 px-4
                 py-3
                 rounded-2xl
-                text-slate-500
-                hover:bg-white/70
-              "
+                transition-all
+                duration-300
+
+                ${activeTab === "incidents"
+                  ? "bg-white shadow-lg text-slate-900"
+                  : "text-slate-500 hover:bg-white/60"
+                }
+              `}
             >
+              <ShieldAlert size={18} />
               Incidents
             </button>
 
             <button
-              className="
+              onClick={() => setActiveTab("analytics")}
+              className={`
                 w-full
                 flex
                 items-center
@@ -244,16 +275,119 @@ function App() {
                 px-4
                 py-3
                 rounded-2xl
-                text-slate-500
-                hover:bg-white/70
-              "
+                transition-all
+                duration-300
+
+                ${activeTab === "analytics"
+                  ? "bg-white shadow-lg text-slate-900"
+                  : "text-slate-500 hover:bg-white/60"
+                }
+              `}
             >
+              <BarChart3 size={18} />
               Analytics
             </button>
 
           </nav>
 
-          <div className="mt-auto">
+          <div className="mt-8">
+            <div className="text-xs uppercase tracking-wider text-slate-400 mb-3">
+              Статистика
+            </div>
+
+            <div className="space-y-3">
+
+              <div className="bg-white/50 rounded-2xl p-3">
+                <div className="text-xs text-slate-500">
+                  Открытые
+                </div>
+
+                <div className="text-xl font-bold text-green-600">
+                  14
+                </div>
+              </div>
+
+              <div className="bg-white/50 rounded-2xl p-3">
+                <div className="text-xs text-slate-500">
+                  High Risk
+                </div>
+
+                <div className="text-xl font-bold text-red-600">
+                  10
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="mb-6">
+
+            <div
+              className="
+                bg-white/60
+                backdrop-blur-xl
+                rounded-3xl
+                border
+                border-white/40
+                p-4
+              "
+            >
+
+              <div className="flex items-center gap-3">
+
+                <div
+                  className="
+                    w-12
+                    h-12
+                    rounded-2xl
+                    bg-gradient-to-br
+                    from-violet-500
+                    to-blue-500
+
+                    flex
+                    items-center
+                    justify-center
+
+                    text-white
+                    font-bold
+                  "
+                >
+                  {user?.name?.charAt(0)}
+                </div>
+
+                <div>
+
+                  <div className="font-semibold text-slate-900">
+                    {user?.name}
+                  </div>
+
+                  <div className="text-sm text-slate-500">
+                    Administrator
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* <div className="text-sm text-slate-500">
+                Administrator
+              </div> */}
+
+              <div className="mt-3 flex items-center gap-2">
+
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+
+                <span className="text-xs text-slate-500">
+                  Online
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="mt-auto space-y-4">
 
             <button
               onClick={openCreateModal}
@@ -278,7 +412,7 @@ function App() {
 
         {/* CONTENT */}
 
-        <div className="flex-1">
+        <div className="flex-1 ml-64">
 
           <Header
             user={user}
@@ -286,16 +420,25 @@ function App() {
             onCreateIncident={openCreateModal}
           />
 
-          <main className="max-w-[1500px] mx-auto px-8 py-8">
+          <main className="max-w-[1800px] mx-auto px-8 py-8">
+            {activeTab === "dashboard" && (
+                <IncidentStats />
+            )}
 
-            <IncidentList refreshTrigger={refreshTrigger} />
+            {activeTab === "incidents" && (
+                <IncidentList refreshTrigger={refreshTrigger} />
+            )}
+
+            {activeTab === "analytics" && (
+                <IncidentStats />
+            )}
 
           </main>
 
         </div>
 
       </div>
-      
+
       <CreateIncidentModal
         isOpen={isCreateModalOpen}
         onClose={closeCreateModal}

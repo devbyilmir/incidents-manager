@@ -3,6 +3,7 @@ import IncidentFilters from './IncidentFilters';
 import IncidentStats from './IncidentStats';
 import IncidentCard from './IncidentCard';
 import IncidentDetailsModal from './IncidentDetailsModal';
+import RecentActivity from './RecentActivity';
 
 const IncidentList = ({ refreshTrigger }) => {
   const [incidents, setIncidents] = useState([]);
@@ -22,7 +23,7 @@ const IncidentList = ({ refreshTrigger }) => {
       const response = await fetch('http://localhost:8000/incidents/', {
         credentials: 'include'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setIncidents(data);
@@ -39,13 +40,13 @@ const IncidentList = ({ refreshTrigger }) => {
 
   // Фильтрация инцидентов
   const filteredIncidents = incidents.filter(incident => {
-    const matchesFilter = filter === 'all' || 
-                         incident.priority === filter || 
-                         incident.status === filter;
-    
+    const matchesFilter = filter === 'all' ||
+      incident.priority === filter ||
+      incident.status === filter;
+
     const matchesSearch = incident.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         incident.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         incident.creator?.name.toLowerCase().includes(searchTerm.toLowerCase());
+      incident.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      incident.creator?.name.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesFilter && matchesSearch;
   });
@@ -53,13 +54,13 @@ const IncidentList = ({ refreshTrigger }) => {
   // Обработчики действий
   const handleDeleteIncident = async (incidentId) => {
     if (!window.confirm('Вы уверены, что хотите удалить этот инцидент? Это действие нельзя отменить!')) return;
-    
+
     try {
       const response = await fetch(`http://localhost:8000/incidents/${incidentId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
-      
+
       if (response.ok) {
         alert('Инцидент удален!');
         fetchIncidents();
@@ -74,7 +75,7 @@ const IncidentList = ({ refreshTrigger }) => {
 
   const handleToggleStatus = async (incidentId, currentStatus) => {
     const newStatus = currentStatus === 'открыт' ? 'закрыт' : 'открыт';
-    
+
     try {
       const response = await fetch(
         `http://localhost:8000/incidents/${incidentId}`,
@@ -89,7 +90,7 @@ const IncidentList = ({ refreshTrigger }) => {
           })
         }
       );
-      
+
       if (response.ok) {
         alert(`Инцидент ${newStatus === 'закрыт' ? 'закрыт' : 'открыт'}!`);
         fetchIncidents();
@@ -116,7 +117,7 @@ const IncidentList = ({ refreshTrigger }) => {
       <div className="text-center">
         <div className="text-red-500 text-xl mb-4">❌</div>
         <div className="text-xl text-gray-600 mb-4">{error}</div>
-        <button 
+        <button
           onClick={fetchIncidents}
           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition duration-200"
         >
@@ -129,7 +130,7 @@ const IncidentList = ({ refreshTrigger }) => {
   return (
     <div className="space-y-6">
       {/* Хедер с фильтрами */}
-      <IncidentFilters 
+      <IncidentFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         filter={filter}
@@ -137,11 +138,22 @@ const IncidentList = ({ refreshTrigger }) => {
         onRefresh={fetchIncidents}
       />
 
-      {/* Статистика */}
-      <IncidentStats />
+      <div className="grid grid-cols-1 2xl:grid-cols-5 gap-6">
+
+        <div className="2xl:col-span-4">
+
+          <IncidentStats />
+
+        </div>
+
+        <div className="h-full">
+          <RecentActivity incidents={incidents} />
+        </div>
+
+      </div>
 
       {/* Модалка деталей инцидента */}
-      <IncidentDetailsModal 
+      <IncidentDetailsModal
         selectedIncident={selectedIncident}
         onClose={() => setSelectedIncident(null)}
       />
@@ -154,13 +166,13 @@ const IncidentList = ({ refreshTrigger }) => {
             {searchTerm || filter !== 'all' ? 'Инцеденты не найдены' : 'Инцедентов пока нет'}
           </h3>
           <p className="text-gray-600 mb-6">
-            {searchTerm || filter !== 'all' 
-              ? 'Попробуйте изменить параметры поиска или фильтрации' 
+            {searchTerm || filter !== 'all'
+              ? 'Попробуйте изменить параметры поиска или фильтрации'
               : 'Будьте первым, кто создаст инцидент'
             }
           </p>
           {(searchTerm || filter !== 'all') && (
-            <button 
+            <button
               onClick={() => {
                 setSearchTerm('');
                 setFilter('all');
@@ -172,7 +184,16 @@ const IncidentList = ({ refreshTrigger }) => {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div
+          className="
+            grid
+            grid-cols-1
+            lg:grid-cols-2
+            2xl:grid-cols-3
+            gap-8
+            items-stretch
+          "
+        >
           {filteredIncidents.map(incident => (
             <IncidentCard
               key={incident.id}

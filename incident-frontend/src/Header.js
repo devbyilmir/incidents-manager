@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShieldAlert } from "lucide-react";
 
 const Header = ({ user, onLogout, onCreateIncident }) => {
   return (
@@ -11,8 +12,8 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
       border-b
       border-white/40
     ">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-center h-20">
+      <div className="w-full px-8">
+        <div className="flex justify-between items-center h-16">
 
           {/* Левая часть */}
           <div className="flex items-center">
@@ -34,7 +35,7 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                   shadow-lg
                 "
               >
-                🚨
+                <ShieldAlert size={18} />
               </div>
 
               <div>
@@ -145,23 +146,6 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                   </div>
 
                 </div>
-
-                {/* <span
-                  className="
-                    px-4
-                    py-2
-                    rounded-2xl
-                    bg-gradient-to-r
-                    from-violet-500
-                    to-purple-600
-                    text-white
-                    text-xs
-                    font-semibold
-                    shadow-md
-                  "
-                >
-                  {user.role}
-                </span> */}
 
                 <button
                   onClick={onLogout}
