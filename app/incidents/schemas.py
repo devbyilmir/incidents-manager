@@ -1,4 +1,4 @@
-from pydantic import BaseModel, computed_field
+from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 from enum import Enum
@@ -12,44 +12,84 @@ class UserShortInfo(BaseModel):
     class Config:
         from_attributes = True
 
-class IncidentCreate(BaseModel):
-    title: str
-    description: str
-    type: str
-    priority: str
-    location: str
 
 class IncidentStatus(str, Enum):
     OPEN = "открыт"
     IN_PROGRESS = "в работе"
     CLOSED = "закрыт"
 
+
 class IncidentStatusUpdate(BaseModel):
     status: IncidentStatus
+    closed_at: datetime | None = None
+
+
+class IncidentStats(BaseModel):
+    total: int
+    open: int
+    in_progress: int
+    closed: int
+    average_risk: float
+
+
+class LocationStats(BaseModel):
+    location: str
+    count: int
+
+
+class IncidentTypeStats(BaseModel):
+    type: str
+    count: int
+
+
+class IncidentType(str, Enum):
+    LEAK = "утечка"
+    EQUIPMENT_FAILURE = "отказ оборудования"
+    CORROSION = "коррозия"
+    FIRE_HAZARD = "пожарная опасность"
+    GAS = "загазованность"
+    AUTOMATION_FAILURE = "сбой автоматики"
+    OTHER = "другое"
+
+
+class IncidentPriority(str, Enum):
+    LOW = "низкий"
+    MEDIUM = "средний"
+    HIGH = "высокий"
+    CRITICAL = "критический"
+
+
+class IncidentCreate(BaseModel):
+    title: str
+    description: str
+    type: IncidentType
+    priority: IncidentPriority
+    location: str
+
 
 class IncidentResponse(BaseModel):
     id: int
     title: str
-    type: str
+    type: IncidentType
     description: str
-    priority: str
+    priority: IncidentPriority
 
     risk_score: int
     risk_level: str
 
-    status: str
+    status: IncidentStatus
     location: str
-    # creator_id: Optional[int] = None
     created_at: datetime
     creator: Optional[UserShortInfo] = None
-
-    # @computed_field
-    # @property
-    # def creator_name(self) -> Optional[str]:
-    #     if hasattr(self, "creator") and self.creator:
-    #         return self.creator.name
-    #     return None
 
     class Config:
         from_attributes = True
 
+
+class ResolutionStats(BaseModel):
+    average_hours: float
+
+
+class RiskDistributionStats(BaseModel):
+    risk_level: str
+    count: int

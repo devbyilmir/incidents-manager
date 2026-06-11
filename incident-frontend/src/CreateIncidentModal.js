@@ -152,10 +152,10 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
                 disabled={loading}
               >
                 <option value="утечка">🛢️ Утечка</option>
-                <option value="поломка">⚙️ Поломка</option>
-                <option value="сбой_автоматики">🤖 Сбой автоматики</option>
+                <option value="отказ оборудования">⚙️ Отказ оборудования</option>
+                <option value="сбой автоматики">🤖 Сбой автоматики</option>
                 <option value="загазованность">🌫️ Загазованность</option>
-                <option value="пожарная_опасность">🔥 Пожарная опасность</option>
+                <option value="пожарная опасность">🔥 Пожарная опасность</option>
                 <option value="коррозия">🛠️ Коррозия</option>
                 <option value="другое">❓ Другое</option>
               </select>

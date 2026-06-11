@@ -76,10 +76,19 @@ const IncidentList = ({ refreshTrigger }) => {
     const newStatus = currentStatus === 'открыт' ? 'закрыт' : 'открыт';
     
     try {
-      const response = await fetch(`http://localhost:8000/incidents/${incidentId}?status=${newStatus}`, {
-        method: 'PATCH',
-        credentials: 'include'
-      });
+      const response = await fetch(
+        `http://localhost:8000/incidents/${incidentId}`,
+        {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: newStatus
+          })
+        }
+      );
       
       if (response.ok) {
         alert(`Инцидент ${newStatus === 'закрыт' ? 'закрыт' : 'открыт'}!`);
@@ -129,7 +138,7 @@ const IncidentList = ({ refreshTrigger }) => {
       />
 
       {/* Статистика */}
-      <IncidentStats incidents={incidents} />
+      <IncidentStats />
 
       {/* Модалка деталей инцидента */}
       <IncidentDetailsModal 

@@ -7,10 +7,13 @@ def calculate_risk(
 
     # Тип инцидента
     type_scores = {
-        "утечка": 50,
-        "отказ оборудования": 40,
-        "перегрев": 30,
-        "авария": 60,
+        "утечка": 60,
+        "отказ оборудования": 50,
+        "коррозия": 35,
+        "пожарная опасность": 80,
+        "загазованность": 70,
+        "сбой автоматики": 45,
+        "другое": 20,
     }
 
     score += type_scores.get(incident_type.lower(), 10)
@@ -19,7 +22,8 @@ def calculate_risk(
     priority_scores = {
         "низкий": 10,
         "средний": 20,
-        "высокий": 30,
+        "высокий": 40,
+        "критический": 60,
     }
 
     score += priority_scores.get(priority.lower(), 10)
@@ -31,11 +35,22 @@ def calculate_risk(
         "склад": 10,
     }
 
-    score += location_scores.get(location.lower(), 5)
+    location_lower = location.lower()
 
-    if score <= 30:
+    if "упн" in location_lower:
+        score += 25
+    elif "цех" in location_lower:
+        score += 20
+    elif "резервуар" in location_lower:
+        score += 30
+    elif "насос" in location_lower:
+        score += 20
+    else:
+        score += 10
+
+    if score <= 40:
         level = "LOW"
-    elif score <= 60:
+    elif score <= 80:
         level = "MEDIUM"
     else:
         level = "HIGH"

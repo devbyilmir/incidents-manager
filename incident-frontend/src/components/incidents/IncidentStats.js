@@ -1,30 +1,162 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const IncidentStats = ({ incidents }) => {
+const IncidentStats = () => {
+    const [stats, setStats] = useState(null);
+    const [resolution, setResolution] = useState(null);
+    const [riskDistribution, setRiskDistribution] = useState([]);
+    const [locations, setLocations] = useState([]);
+
+    useEffect(() => {
+        loadStats();
+    }, []);
+
+    const loadStats = async () => {
+        try {
+            const [
+                statsRes,
+                resolutionRes,
+                riskRes,
+                locationsRes,
+            ] = await Promise.all([
+                fetch('http://localhost:8000/incidents/stats', {
+                    credentials: 'include'
+                }),
+                fetch('http://localhost:8000/incidents/stats/resolution-time', {
+                    credentials: 'include'
+                }),
+                fetch('http://localhost:8000/incidents/stats/risk-distribution', {
+                    credentials: 'include'
+                }),
+                fetch('http://localhost:8000/incidents/stats/locations', {
+                    credentials: 'include'
+                }),
+            ]);
+
+            const statsData = await statsRes.json();
+            const resolutionData = await resolutionRes.json();
+            const riskData = await riskRes.json();
+            const locationsData = await locationsRes.json();
+
+            setStats(statsData);
+            setResolution(resolutionData);
+            setRiskDistribution(riskData);
+            setLocations(locationsData);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (!stats) {
+        return null;
+    }
+
+    const highRisk =
+        riskDistribution.find(r => r.risk_level === 'HIGH')?.count || 0;
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <div className="text-2xl font-bold text-gray-900">{incidents.length}</div>
-                <div className="text-gray-600 text-sm">Всего инцидентов</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <div className="text-2xl font-bold text-red-600">
-                    {incidents.filter(i => i.priority === 'критический').length}
+        <div className="space-y-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-2xl font-bold">
+                        {stats.total}
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                        Всего инцидентов
+                    </div>
                 </div>
-                <div className="text-gray-600 text-sm">Критические</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <div className="text-2xl font-bold text-orange-600">
-                    {incidents.filter(i => i.priority === 'высокий').length}
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-2xl font-bold text-green-600">
+                        {stats.open}
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                        Открыто
+                    </div>
                 </div>
-                <div className="text-gray-600 text-sm">Высокий приоритет</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <div className="text-2xl font-bold text-gray-900">
-                    {incidents.filter(i => i.status === 'открыт').length}
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-2xl font-bold text-blue-600">
+                        {stats.in_progress}
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                        В работе
+                    </div>
                 </div>
-                <div className="text-gray-600 text-sm">Открытые</div>
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-2xl font-bold text-gray-700">
+                        {stats.closed}
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                        Закрыто
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-2xl font-bold text-red-600">
+                        {highRisk}
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                        HIGH риск
+                    </div>
+                </div>
+
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-lg font-semibold mb-2">
+                        Средний риск
+                    </div>
+
+                    <div className="text-3xl font-bold text-orange-600">
+                        {stats.average_risk}
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="text-lg font-semibold mb-2">
+                        Среднее время решения
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm border p-4">
+
+                        <div className="text-lg font-semibold mb-4">
+                            🔥 ТОП проблемных локаций
+                        </div>
+
+                        <div className="space-y-2">
+
+                            {locations.slice(0, 5).map((location, index) => (
+                                <div
+                                    key={index}
+                                    className="flex justify-between border-b pb-2"
+                                >
+                                    <span>
+                                        {location.location}
+                                    </span>
+
+                                    <span className="font-bold text-red-600">
+                                        {location.count}
+                                    </span>
+                                </div>
+                            ))}
+
+                        </div>
+
+                    </div>
+
+                    <div className="text-3xl font-bold text-indigo-600">
+                        {resolution?.average_hours || 0} ч
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     );
 };
