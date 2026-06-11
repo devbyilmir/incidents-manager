@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+// import RecentActivity from "../incidents/RecentActivity";
 
 const COLORS = [
   "#22c55e",
@@ -19,6 +20,7 @@ const COLORS = [
 export default function DashboardCharts({
   riskDistribution,
   incidentTypes,
+  incidents,
 }) {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
@@ -72,6 +74,12 @@ export default function DashboardCharts({
         </div>
 
       </div>
+
+      {/* <div className="2xl:col-span-2 row-span-2">
+
+        <RecentActivity incidents={incidents} />
+
+      </div> */}
 
       {/* Types Chart */}
 

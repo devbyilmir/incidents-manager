@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import DashboardCharts from "../analytics/DashboardCharts";
 import CountUp from "react-countup";
 
+
 const IncidentStats = () => {
     const [stats, setStats] = useState(null);
     const [resolution, setResolution] = useState(null);
     const [riskDistribution, setRiskDistribution] = useState([]);
     const [locations, setLocations] = useState([]);
     const [incidentTypes, setIncidentTypes] = useState([]);
+    const [incidents, setIncidents] = useState([]);
 
     useEffect(() => {
         loadStats();
@@ -21,6 +23,7 @@ const IncidentStats = () => {
                 riskRes,
                 locationsRes,
                 typesRes,
+                incidentsRes
             ] = await Promise.all([
                 fetch('http://localhost:8000/incidents/stats', {
                     credentials: 'include'
@@ -39,6 +42,11 @@ const IncidentStats = () => {
                     credentials: 'include'
                 }
                 ),
+                fetch(
+                    'http://localhost:8000/incidents/', {
+                        credentials: 'include'
+                }
+                )
             ]);
 
             const statsData = await statsRes.json();
@@ -46,7 +54,9 @@ const IncidentStats = () => {
             const riskData = await riskRes.json();
             const locationsData = await locationsRes.json();
             const typesData = await typesRes.json();
+            const incidentsData = await incidentsRes.json();
 
+            setIncidents(incidentsData);
             setStats(statsData);
             setResolution(resolutionData);
             setRiskDistribution(riskData);
@@ -95,6 +105,7 @@ const IncidentStats = () => {
             <DashboardCharts
                 riskDistribution={riskDistribution}
                 incidentTypes={incidentTypes}
+                incidents={incidents}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
