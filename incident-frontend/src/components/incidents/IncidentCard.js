@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+  MapPin,
+  ShieldAlert,
+  Eye,
+  Trash2
+} from "lucide-react";
 
 const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => {
   const getPriorityIcon = (priority) => {
@@ -43,7 +49,8 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
         ${
           incident.status === 'закрыт'
             ? 'opacity-70'
-            : 'hover:-translate-y-2 hover:shadow-2xl'
+            // : 'hover:-translate-y-2 hover:shadow-2xl'
+            : 'hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(99,102,241,0.18)]'
         }
       `}
     >
@@ -197,7 +204,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
             py-2
           "
         >
-          <span className="mr-2">📍</span>
+          <span className="mr-2"><MapPin size={14} /></span>
           <span className="line-clamp-1">{incident.location}</span>
         </div>
 
@@ -330,7 +337,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
               font-medium
             "
           >
-            Открыть →
+            <Eye size={16} />
           </button>
 
           <div className="flex gap-3">
@@ -354,7 +361,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
                 transition-colors
               "
             >
-              🗑️
+              <Trash2 size={16} />
             </button>
 
           </div>

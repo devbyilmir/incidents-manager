@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShieldAlert } from "lucide-react";
 
 const Header = ({ user, onLogout, onCreateIncident }) => {
   return (
@@ -34,7 +35,7 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                   shadow-lg
                 "
               >
-                🚨
+                <ShieldAlert size={18} />
               </div>
 
               <div>

@@ -253,6 +253,41 @@ function App() {
 
           </nav>
 
+          <div className="mt-auto mb-6">
+
+            <div
+              className="
+                bg-white/60
+                backdrop-blur-xl
+                rounded-3xl
+                border
+                border-white/40
+                p-4
+              "
+            >
+
+              <div className="font-semibold text-slate-900">
+                {user?.name}
+              </div>
+
+              <div className="text-sm text-slate-500">
+                Administrator
+              </div>
+
+              <div className="mt-3 flex items-center gap-2">
+
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+
+                <span className="text-xs text-slate-500">
+                  Online
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
           <div className="mt-auto">
 
             <button

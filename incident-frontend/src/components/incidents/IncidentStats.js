@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import DashboardCharts from "./analytics/DashboardCharts";
+import CountUp from "react-countup";
 
 const IncidentStats = () => {
     const [stats, setStats] = useState(null);
     const [resolution, setResolution] = useState(null);
     const [riskDistribution, setRiskDistribution] = useState([]);
     const [locations, setLocations] = useState([]);
+    const [incidentTypes, setIncidentTypes] = useState([]);
 
     useEffect(() => {
         loadStats();
@@ -17,6 +20,7 @@ const IncidentStats = () => {
                 resolutionRes,
                 riskRes,
                 locationsRes,
+                typesRes,
             ] = await Promise.all([
                 fetch('http://localhost:8000/incidents/stats', {
                     credentials: 'include'
@@ -30,17 +34,24 @@ const IncidentStats = () => {
                 fetch('http://localhost:8000/incidents/stats/locations', {
                     credentials: 'include'
                 }),
+                fetch(
+                    'http://localhost:8000/incidents/stats/types', {
+                        credentials: 'include'
+                    }
+                ),
             ]);
 
             const statsData = await statsRes.json();
             const resolutionData = await resolutionRes.json();
             const riskData = await riskRes.json();
             const locationsData = await locationsRes.json();
+            const typesData = await typesRes.json();
 
             setStats(statsData);
             setResolution(resolutionData);
             setRiskDistribution(riskData);
             setLocations(locationsData);
+            setIncidentTypes(typesData);
 
         } catch (error) {
             console.error(error);
@@ -56,81 +67,182 @@ const IncidentStats = () => {
 
     return (
         <div className="space-y-4">
+            <DashboardCharts
+                riskDistribution={riskDistribution}
+                incidentTypes={incidentTypes}
+            />
+
+            <div
+                className="
+                    bg-white/60
+                    backdrop-blur-2xl
+                    rounded-3xl
+                    border
+                    border-white/40
+                    p-8
+                    shadow-xl
+                    mb-4
+                "
+            >
+
+                <div className="text-sm text-slate-500">
+                    Incident Analytics
+                </div>
+
+                <h1 className="text-4xl font-bold text-slate-900 mt-2">
+                    Operations Dashboard
+                </h1>
+
+                <p className="text-slate-500 mt-3">
+                    Мониторинг инцидентов, рисков и производственной безопасности.
+                </p>
+
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-                <div className="bg-white/70
-                        backdrop-blur-xl
+                <div
+                    className="
+                        bg-white/60
+                        backdrop-blur-2xl
                         rounded-3xl
                         border
-                        border-white/50
-                        shadow-lg
-                        p-5">
-                    <div className="text-4xl font-bold">
-                        {stats.total}
+                        border-white/40
+                        shadow-xl
+                        p-6
+                        hover:shadow-2xl
+                        hover:scale-[1.02]
+                        transition-all
+                        duration-300
+                    "
+                >
+                    <div className="text-4xl font-bold text-slate-900">
+                        <CountUp
+                            end={stats.total}
+                            duration={1.5}
+                        />
                     </div>
                     <div className="text-gray-500 text-sm">
                         Всего инцидентов
                     </div>
+                    <div className="text-xs text-slate-400 mt-2">
+                        База данных активных инцидентов
+                    </div>
                 </div>
 
-                <div className="bg-white/70
-                        backdrop-blur-xl
+                <div
+                    className="
+                        bg-white/60
+                        backdrop-blur-2xl
                         rounded-3xl
                         border
-                        border-white/50
-                        shadow-lg
-                        p-5">
+                        border-white/40
+                        shadow-xl
+                        p-6
+                        hover:shadow-2xl
+                        hover:scale-[1.02]
+                        transition-all
+                        duration-300
+                    "
+                >
                     <div className="text-4xl font-bold text-green-600">
-                        {stats.open}
+                        <CountUp
+                            end={stats.open}
+                            duration={1.5}
+                        />
                     </div>
                     <div className="text-gray-500 text-sm">
                         Открыто
                     </div>
+                    <div className="text-xs text-emerald-500 mt-2">
+                        Требует внимания
+                    </div>
                 </div>
 
-                <div className="bg-white/70
-                        backdrop-blur-xl
+                <div
+                    className="
+                        bg-white/60
+                        backdrop-blur-2xl
                         rounded-3xl
                         border
-                        border-white/50
-                        shadow-lg
-                        p-5">
+                        border-white/40
+                        shadow-xl
+                        p-6
+                        hover:shadow-2xl
+                        hover:scale-[1.02]
+                        transition-all
+                        duration-300
+                    "
+                >
                     <div className="text-4xl font-bold text-blue-600">
-                        {stats.in_progress}
+                        <CountUp
+                            end={stats.in_progress}
+                            duration={1.5}
+                        />
                     </div>
                     <div className="text-gray-500 text-sm">
                         В работе
                     </div>
+                    <div className="text-xs text-blue-500 mt-2">
+                        В процессе
+                    </div>
                 </div>
 
-                <div className="bg-white/70
-                        backdrop-blur-xl
+                <div
+                    className="
+                        bg-white/60
+                        backdrop-blur-2xl
                         rounded-3xl
                         border
-                        border-white/50
-                        shadow-lg
-                        p-5">
+                        border-white/40
+                        shadow-xl
+                        p-6
+                        hover:shadow-2xl
+                        hover:scale-[1.02]
+                        transition-all
+                        duration-300
+                    "
+                >
                     <div className="text-4xl font-bold text-gray-700">
-                        {stats.closed}
+                        <CountUp
+                            end={stats.closed}
+                            duration={1.5}
+                        />
                     </div>
                     <div className="text-gray-500 text-sm">
                         Закрыто
                     </div>
+                    <div className="text-xs text-slate-500 mt-2">
+                        Успешно решено
+                    </div>
                 </div>
 
-                <div className="bg-white/70
-                        backdrop-blur-xl
+                <div
+                    className="
+                        bg-white/60
+                        backdrop-blur-2xl
                         rounded-3xl
                         border
-                        border-white/50
-                        shadow-lg
-                        p-5">
+                        border-white/40
+                        shadow-xl
+                        p-6
+                        hover:shadow-2xl
+                        hover:scale-[1.02]
+                        transition-all
+                        duration-300
+                    "
+                >
                     <div className="text-4xl font-bold text-red-600">
-                        {highRisk}
+                        <CountUp
+                            end={highRisk}
+                            duration={1.5}
+                        />
                     </div>
                     <div className="text-gray-500 text-sm">
                         HIGH риск
+                    </div>
+                    <div className="text-xs text-red-500 mt-2">
+                        Критические ситуации
                     </div>
                 </div>
 
