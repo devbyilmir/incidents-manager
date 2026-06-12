@@ -94,3 +94,11 @@ class ResolutionStats(BaseModel):
 class RiskDistributionStats(BaseModel):
     risk_level: str
     count: int
+
+
+class DashboardResponse(BaseModel):
+    stats: IncidentStats
+    resolution: ResolutionStats
+    risk_distribution: list[RiskDistributionStats]
+    locations: list[LocationStats]
+    incident_types: list[IncidentTypeStats]

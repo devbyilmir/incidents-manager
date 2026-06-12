@@ -1,28 +1,12 @@
 import React from 'react';
-import { useQuery } from "@tanstack/react-query";
+import { useIncidents } from "../../hooks/useIncidents";
 import IncidentStats from '../incidents/IncidentStats';
 import RecentActivity from '../incidents/RecentActivity';
 
 const DashboardPage = () => {
   const {
     data: incidents = []
-  } = useQuery({
-    queryKey: ["incidents"],
-    queryFn: async () => {
-      const response = await fetch(
-        "http://localhost:8000/incidents/",
-        {
-          credentials: "include"
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Ошибка загрузки инцидентов");
-      }
-
-      return response.json();
-    }
-  });
+  } = useIncidents();
 
   return (
     <div className="grid grid-cols-1 2xl:grid-cols-5 gap-6 items-stretch">
