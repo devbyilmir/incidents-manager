@@ -57,7 +57,6 @@ const useAuth = () => {
 // Кастомный хук для управления инцидентами
 const useIncidents = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const openCreateModal = () => setIsCreateModalOpen(true);
   const closeCreateModal = () => setIsCreateModalOpen(false);
@@ -65,13 +64,10 @@ const useIncidents = () => {
   const handleIncidentCreated = (newIncident) => {
     console.log('Новый инцидент создан:', newIncident);
     setIsCreateModalOpen(false);
-    // ТРИГГЕРИМ ОБНОВЛЕНИЕ СПИСКА!
-    setRefreshTrigger(prev => prev + 1);
   };
 
   return {
     isCreateModalOpen,
-    refreshTrigger,
     openCreateModal,
     closeCreateModal,
     handleIncidentCreated
@@ -103,7 +99,6 @@ function App() {
   const { isLoggedIn, user, loading, checkAuth, logout } = useAuth();
   const {
     isCreateModalOpen,
-    refreshTrigger,
     openCreateModal,
     closeCreateModal,
     handleIncidentCreated
@@ -332,7 +327,7 @@ function App() {
             )}
 
             {activeTab === "incidents" && (
-                <IncidentList refreshTrigger={refreshTrigger} />
+                <IncidentList />
             )}
 
             {activeTab === "analytics" && (

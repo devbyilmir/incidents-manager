@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Toaster } from "react-hot-toast";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./queryClient";
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/600.css';
@@ -14,20 +16,24 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
 
-    <App />
+    <QueryClientProvider client={queryClient}>
 
-    <Toaster
-      position="top-right"
-      toastOptions={{
-        duration: 3000,
-        style: {
-          background: "rgba(255,255,255,0.9)",
-          backdropFilter: "blur(20px)",
-          borderRadius: "18px",
-          border: "1px solid rgba(255,255,255,0.5)"
-        }
-      }}
-    />
+      <App />
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "rgba(255,255,255,0.9)",
+            backdropFilter: "blur(20px)",
+            borderRadius: "18px",
+            border: "1px solid rgba(255,255,255,0.5)"
+          }
+        }}
+      />
+
+    </QueryClientProvider>
 
   </React.StrictMode>
 );

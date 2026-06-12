@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useQueryClient } from "@tanstack/react-query";
+
 
 const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -39,6 +42,10 @@ const CreateIncidentModal = ({ isOpen, onClose, onIncidentCreated }) => {
         });
 
         // Уведомляем родительский компонент
+        await queryClient.invalidateQueries({
+          queryKey: ["incidents"]
+        });
+
         onIncidentCreated(newIncident);
         onClose();
 

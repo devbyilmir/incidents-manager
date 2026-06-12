@@ -1,42 +1,111 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import IncidentFilters from './IncidentFilters';
 import IncidentCard from './IncidentCard';
 import IncidentDetailsModal from './IncidentDetailsModal';
 import toast from "react-hot-toast";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient
+} from "@tanstack/react-query";
 
 
 const IncidentList = ({ refreshTrigger }) => {
-  const [incidents, setIncidents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const {
+    data: incidents = [],
+    isLoading: loading,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: ["incidents"],
+    queryFn: async () => {
+      const response = await fetch(
+        "http://localhost:8000/incidents/",
+        {
+          credentials: "include"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Ошибка загрузки инцидентов");
+      }
+
+      return response.json();
+    }
+  });
+
+  const queryClient = useQueryClient();
+  const deleteIncidentMutation = useMutation({
+    mutationFn: async (incidentId) => {
+      const response = await fetch(
+        `http://localhost:8000/incidents/${incidentId}`,
+        {
+          method: "DELETE",
+          credentials: "include"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Ошибка удаления");
+      }
+
+      return response.json();
+    },
+
+    onSuccess: () => {
+      toast.success("Инцидент удален");
+
+      queryClient.invalidateQueries({
+        queryKey: ["incidents"]
+      });
+    },
+
+    onError: () => {
+      toast.error("Ошибка удаления");
+    }
+  });
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({
+      incidentId,
+      newStatus
+    }) => {
+
+      const response = await fetch(
+        `http://localhost:8000/incidents/${incidentId}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            status: newStatus
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Ошибка обновления");
+      }
+
+      return response.json();
+    },
+
+    onSuccess: () => {
+      toast.success("Статус обновлен");
+
+      queryClient.invalidateQueries({
+        queryKey: ["incidents"]
+      });
+    },
+
+    onError: () => {
+      toast.error("Ошибка обновления");
+    }
+  });
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIncident, setSelectedIncident] = useState(null);
-
-  useEffect(() => {
-    fetchIncidents();
-  }, [refreshTrigger]);
-
-  const fetchIncidents = async () => {
-    try {
-      setError(null);
-      const response = await fetch('http://localhost:8000/incidents/', {
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setIncidents(data);
-      } else {
-        throw new Error('Ошибка загрузки инцидентов');
-      }
-    } catch (error) {
-      console.error('Ошибка:', error);
-      setError('Не удалось загрузить инциденты');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Фильтрация инцидентов
   const filteredIncidents = incidents.filter(incident => {
@@ -52,56 +121,24 @@ const IncidentList = ({ refreshTrigger }) => {
   });
 
   // Обработчики действий
-  const handleDeleteIncident = async (incidentId) => {
-    // if (!window.confirm('Вы уверены, что хотите удалить этот инцидент? Это действие нельзя отменить!')) return;
-
-    try {
-      const response = await fetch(`http://localhost:8000/incidents/${incidentId}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        toast.success("Инцидент удален");
-        fetchIncidents();
-      } else {
-        toast.error("Ошибка удаления");
-      }
-    } catch (error) {
-      console.error('Ошибка:', error);
-      toast.error("Ошибка соединения");
-    }
+  const handleDeleteIncident = (incidentId) => {
+    deleteIncidentMutation.mutate(incidentId);
   };
 
-  const handleToggleStatus = async (incidentId, currentStatus) => {
-    const newStatus = currentStatus === 'открыт' ? 'закрыт' : 'открыт';
+  const handleToggleStatus = (
+    incidentId,
+    currentStatus
+  ) => {
 
-    try {
-      const response = await fetch(
-        `http://localhost:8000/incidents/${incidentId}`,
-        {
-          method: 'PATCH',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            status: newStatus
-          })
-        }
-      );
+    const newStatus =
+      currentStatus === "открыт"
+        ? "закрыт"
+        : "открыт";
 
-      if (response.ok) {
-        // alert(`Инцидент ${newStatus === 'закрыт' ? 'закрыт' : 'открыт'}!`);
-        toast.success(`Статус обновлен`);
-        fetchIncidents();
-      } else {
-        alert('Ошибка при изменении статуса');
-      }
-    } catch (error) {
-      console.error('Ошибка:', error);
-      alert('Ошибка соединения');
-    }
+    updateStatusMutation.mutate({
+      incidentId,
+      newStatus
+    });
   };
 
   if (loading) return (
@@ -119,7 +156,7 @@ const IncidentList = ({ refreshTrigger }) => {
         <div className="text-red-500 text-xl mb-4">❌</div>
         <div className="text-xl text-gray-600 mb-4">{error}</div>
         <button
-          onClick={fetchIncidents}
+          onClick={() => refetch()}
           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition duration-200"
         >
           Попробовать снова
@@ -136,7 +173,7 @@ const IncidentList = ({ refreshTrigger }) => {
         setSearchTerm={setSearchTerm}
         filter={filter}
         setFilter={setFilter}
-        onRefresh={fetchIncidents}
+        onRefresh={refetch}
       />
 
       {/* Модалка деталей инцидента */}
