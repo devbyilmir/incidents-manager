@@ -49,3 +49,5 @@ logs/
 # Poetry
 .pytest_cache/
 .coverage
+
+*.txt
