@@ -1,72 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import DashboardCharts from "../analytics/DashboardCharts";
 import CountUp from "react-countup";
+import { useDashboard } from "../../hooks/useDashboard";
+import { useIncidents } from "../../hooks/useIncidents";
 
 
 const IncidentStats = () => {
-    const [stats, setStats] = useState(null);
-    const [resolution, setResolution] = useState(null);
-    const [riskDistribution, setRiskDistribution] = useState([]);
-    const [locations, setLocations] = useState([]);
-    const [incidentTypes, setIncidentTypes] = useState([]);
-    const [incidents, setIncidents] = useState([]);
+    const {
+        data: dashboard,
+        isLoading
+    } = useDashboard();
 
-    useEffect(() => {
-        loadStats();
-    }, []);
+    const {
+        data: incidents = []
+    } = useIncidents();
 
-    const loadStats = async () => {
-        try {
-            const [
-                statsRes,
-                resolutionRes,
-                riskRes,
-                locationsRes,
-                typesRes,
-                incidentsRes
-            ] = await Promise.all([
-                fetch('http://localhost:8000/incidents/stats', {
-                    credentials: 'include'
-                }),
-                fetch('http://localhost:8000/incidents/stats/resolution-time', {
-                    credentials: 'include'
-                }),
-                fetch('http://localhost:8000/incidents/stats/risk-distribution', {
-                    credentials: 'include'
-                }),
-                fetch('http://localhost:8000/incidents/stats/locations', {
-                    credentials: 'include'
-                }),
-                fetch(
-                    'http://localhost:8000/incidents/stats/types', {
-                    credentials: 'include'
-                }
-                ),
-                fetch(
-                    'http://localhost:8000/incidents/', {
-                        credentials: 'include'
-                }
-                )
-            ]);
+    if (isLoading || !dashboard) {
+        return null;
+    }
 
-            const statsData = await statsRes.json();
-            const resolutionData = await resolutionRes.json();
-            const riskData = await riskRes.json();
-            const locationsData = await locationsRes.json();
-            const typesData = await typesRes.json();
-            const incidentsData = await incidentsRes.json();
-
-            setIncidents(incidentsData);
-            setStats(statsData);
-            setResolution(resolutionData);
-            setRiskDistribution(riskData);
-            setLocations(locationsData);
-            setIncidentTypes(typesData);
-
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const {
+        stats,
+        resolution,
+        riskDistribution,
+        locations,
+        incidentTypes
+    } = dashboard;
 
     if (!stats) {
         return null;
