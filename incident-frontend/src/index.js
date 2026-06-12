@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { WebSocketProvider } from "./providers/WebSocketProvider";
 import { queryClient } from "./queryClient";
+import { BrowserRouter } from "react-router-dom";
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/600.css';
@@ -21,6 +22,8 @@ root.render(
 
   // </React.StrictMode>
   <QueryClientProvider client={queryClient}>
+
+    <BrowserRouter>
 
       <WebSocketProvider>
 
@@ -41,7 +44,9 @@ root.render(
 
       </WebSocketProvider>
 
-    </QueryClientProvider>
+    </BrowserRouter>
+
+  </QueryClientProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

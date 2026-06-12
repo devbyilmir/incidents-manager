@@ -12,6 +12,12 @@ import {
   ShieldAlert,
   BarChart3
 } from "lucide-react";
+import {
+  Routes,
+  Route,
+  Navigate,
+  NavLink
+} from "react-router-dom";
 
 
 // Кастомный хук для авторизации
@@ -79,7 +85,6 @@ function App() {
     x: 0,
     y: 0,
   });
-  const [activeTab, setActiveTab] = useState("dashboard");
 
 
   useEffect(() => {
@@ -215,9 +220,9 @@ function App() {
 
           <nav className="space-y-2">
 
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className={`
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => `
                 w-full
                 flex
                 items-center
@@ -228,7 +233,7 @@ function App() {
                 transition-all
                 duration-300
 
-                ${activeTab === "dashboard"
+                ${isActive
                   ? "bg-white shadow-lg text-slate-900"
                   : "text-slate-500 hover:bg-white/60"
                 }
@@ -236,11 +241,11 @@ function App() {
             >
               <LayoutDashboard size={18} />
               Dashboard
-            </button>
+            </NavLink>
 
-            <button
-              onClick={() => setActiveTab("incidents")}
-              className={`
+            <NavLink
+              to="/incidents"
+              className={({ isActive }) => `
                 w-full
                 flex
                 items-center
@@ -251,7 +256,7 @@ function App() {
                 transition-all
                 duration-300
 
-                ${activeTab === "incidents"
+                ${isActive
                   ? "bg-white shadow-lg text-slate-900"
                   : "text-slate-500 hover:bg-white/60"
                 }
@@ -259,11 +264,11 @@ function App() {
             >
               <ShieldAlert size={18} />
               Incidents
-            </button>
+            </NavLink>
 
-            <button
-              onClick={() => setActiveTab("analytics")}
-              className={`
+            <NavLink
+              to="/analytics"
+              className={({ isActive }) => `
                 w-full
                 flex
                 items-center
@@ -274,7 +279,7 @@ function App() {
                 transition-all
                 duration-300
 
-                ${activeTab === "analytics"
+                ${isActive
                   ? "bg-white shadow-lg text-slate-900"
                   : "text-slate-500 hover:bg-white/60"
                 }
@@ -282,7 +287,7 @@ function App() {
             >
               <BarChart3 size={18} />
               Analytics
-            </button>
+            </NavLink>
 
           </nav>
 
@@ -322,17 +327,35 @@ function App() {
           />
 
           <main className="max-w-[1800px] mx-auto px-8 py-8">
-            {activeTab === "dashboard" && (
-                <DashboardPage />
-            )}
 
-            {activeTab === "incidents" && (
-                <IncidentList />
-            )}
+            <Routes>
 
-            {activeTab === "analytics" && (
-                <IncidentStats />
-            )}
+              <Route
+                path="/"
+                element={
+                  <Navigate
+                    to="/dashboard"
+                    replace
+                  />
+                }
+              />
+
+              <Route
+                path="/dashboard"
+                element={<DashboardPage />}
+              />
+
+              <Route
+                path="/incidents"
+                element={<IncidentList />}
+              />
+
+              <Route
+                path="/analytics"
+                element={<IncidentStats />}
+              />
+
+            </Routes>
 
           </main>
 
