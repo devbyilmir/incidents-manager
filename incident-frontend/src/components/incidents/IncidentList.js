@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import IncidentFilters from './IncidentFilters';
 import IncidentCard from './IncidentCard';
 import IncidentDetailsModal from './IncidentDetailsModal';
+import toast from "react-hot-toast";
 
 
 const IncidentList = ({ refreshTrigger }) => {
@@ -52,7 +53,7 @@ const IncidentList = ({ refreshTrigger }) => {
 
   // Обработчики действий
   const handleDeleteIncident = async (incidentId) => {
-    if (!window.confirm('Вы уверены, что хотите удалить этот инцидент? Это действие нельзя отменить!')) return;
+    // if (!window.confirm('Вы уверены, что хотите удалить этот инцидент? Это действие нельзя отменить!')) return;
 
     try {
       const response = await fetch(`http://localhost:8000/incidents/${incidentId}`, {
@@ -61,14 +62,14 @@ const IncidentList = ({ refreshTrigger }) => {
       });
 
       if (response.ok) {
-        alert('Инцидент удален!');
+        toast.success("Инцидент удален");
         fetchIncidents();
       } else {
-        alert('Ошибка при удалении инцидента');
+        toast.error("Ошибка удаления");
       }
     } catch (error) {
       console.error('Ошибка:', error);
-      alert('Ошибка соединения с сервером');
+      toast.error("Ошибка соединения");
     }
   };
 
@@ -91,7 +92,8 @@ const IncidentList = ({ refreshTrigger }) => {
       );
 
       if (response.ok) {
-        alert(`Инцидент ${newStatus === 'закрыт' ? 'закрыт' : 'открыт'}!`);
+        // alert(`Инцидент ${newStatus === 'закрыт' ? 'закрыт' : 'открыт'}!`);
+        toast.success(`Статус обновлен`);
         fetchIncidents();
       } else {
         alert('Ошибка при изменении статуса');

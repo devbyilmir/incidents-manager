@@ -102,6 +102,50 @@ const IncidentStats = () => {
                 </p>
 
             </div>
+            
+            <div
+                className="
+                    bg-gradient-to-r
+                    from-violet-600
+                    to-blue-600
+                    rounded-3xl
+                    p-6
+                    text-white
+                "
+                >
+
+                <div className="text-sm opacity-80">
+                    AI SUMMARY
+                </div>
+
+                <div className="text-2xl font-bold mt-2">
+                    Сводка системы
+                </div>
+
+                <div className="mt-4 space-y-2">
+
+                    <div>
+                    Всего инцидентов: {stats.total}
+                    </div>
+
+                    <div>
+                    HIGH риск: {highRisk}
+                    </div>
+
+                    <div>
+                    Средний риск: {stats.average_risk}
+                    </div>
+
+                    <div>
+                    Самый частый тип:
+                    {" "}
+                    {incidentTypes[0]?.type || "Нет данных"}
+                    </div>
+
+                </div>
+
+                </div>
+
             <DashboardCharts
                 riskDistribution={riskDistribution}
                 incidentTypes={incidentTypes}

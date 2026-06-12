@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Toaster } from "react-hot-toast";
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/600.css';
@@ -12,7 +13,22 @@ import '@fontsource/montserrat/700.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+
     <App />
+
+    <Toaster
+      position="top-right"
+      toastOptions={{
+        duration: 3000,
+        style: {
+          background: "rgba(255,255,255,0.9)",
+          backdropFilter: "blur(20px)",
+          borderRadius: "18px",
+          border: "1px solid rgba(255,255,255,0.5)"
+        }
+      }}
+    />
+
   </React.StrictMode>
 );
 

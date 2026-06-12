@@ -11,7 +11,7 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
     name: str
-    role: UserRole
+    # role: UserRole
 
 class UserAuth(BaseModel):
     email: EmailStr

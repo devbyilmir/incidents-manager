@@ -84,15 +84,29 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                       {user.name}
                     </span>
 
-                    <span className="text-xs text-slate-500">
-                      {user.role === 'admin'
-                        ? 'Администратор системы'
-                        : user.role === 'master'
-                        ? 'Ответственный специалист'
-                        : 'Оператор'}
-                    </span>
+                    <div
+                      className={`
+                        mt-1
+                        inline-flex
+                        px-2
+                        py-1
+                        rounded-lg
+                        text-[10px]
+                        font-bold
 
-                    <div className="flex items-center gap-2 mt-1">
+                        ${
+                          user.role === "admin"
+                            ? "bg-red-100 text-red-700"
+                            : user.role === "master"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-slate-100 text-slate-700"
+                        }
+                      `}
+                    >
+                      {user.role.toUpperCase()}
+                    </div>
+
+                    {/* <div className="flex items-center gap-2 mt-1">
 
                       <div className="w-2 h-2 rounded-full bg-emerald-500" />
 
@@ -100,7 +114,7 @@ const Header = ({ user, onLogout, onCreateIncident }) => {
                         Online
                       </span>
 
-                    </div>
+                    </div> */}
 
                   </div>
 

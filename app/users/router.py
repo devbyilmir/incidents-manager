@@ -35,7 +35,8 @@ async def register_user(user_data: UserRegister):
         email=user_data.email,
         hashed_password=hashed_password,
         name=user_data.name,
-        role=user_data.role.value,
+        # role=user_data.role.value,
+        role="operator",
     )
     return {"message": "Пользователь создан"}
 

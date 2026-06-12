@@ -175,29 +175,54 @@ const IncidentDetailsModal = ({ selectedIncident, onClose }) => {
 
           {/* AI Recommendation */}
 
-          <div>
+          <div
+            className="
+              bg-gradient-to-r
+              from-violet-500/10
+              to-blue-500/10
+              border
+              border-violet-200
+              rounded-3xl
+              p-5
+            "
+          >
 
-              <label className="block text-sm font-medium text-violet-600 mb-2">
-                  AI Recommendation
-              </label>
+            <div className="flex items-center gap-3 mb-3">
 
               <div
-                  className="
-                      bg-violet-50
-                      border
-                      border-violet-200
-                      rounded-2xl
-                      p-4
-                  "
+                className="
+                  w-10
+                  h-10
+                  rounded-2xl
+                  bg-gradient-to-r
+                  from-violet-600
+                  to-blue-600
+                  flex
+                  items-center
+                  justify-center
+                  text-white
+                "
               >
+                🤖
+              </div>
 
-                  <div className="text-gray-700">
+              <div>
 
-                      {selectedIncident.recommendation}
+                <div className="font-semibold">
+                  AI Recommendation
+                </div>
 
-                  </div>
+                <div className="text-xs text-slate-500">
+                  Автоматический анализ риска
+                </div>
 
               </div>
+
+            </div>
+
+            <div className="text-slate-700">
+              {selectedIncident.recommendation}
+            </div>
 
           </div>
 

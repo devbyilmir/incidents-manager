@@ -3,8 +3,11 @@ import {
   MapPin,
   ShieldAlert,
   Eye,
-  Trash2
+  Trash2,
+  CheckCircle2,
+  LockOpen
 } from "lucide-react";
+
 
 const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => {
   const getPriorityIcon = (priority) => {
@@ -174,6 +177,36 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
               {incident.risk_score}
             </div>
 
+            <div
+              className="
+                w-32
+                h-2
+                bg-slate-200
+                rounded-full
+                mt-2
+                overflow-hidden
+              "
+            >
+
+              <div
+                className={`
+                  h-full
+
+                  ${
+                    incident.risk_level === "HIGH"
+                      ? "bg-red-500"
+                      : incident.risk_level === "MEDIUM"
+                      ? "bg-yellow-500"
+                      : "bg-green-500"
+                  }
+                `}
+                style={{
+                  width: `${Math.min(incident.risk_score, 100)}%`
+                }}
+              />
+
+            </div>
+
           </div>
 
           <div
@@ -341,15 +374,22 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
         <div className="flex justify-between items-center">
 
           <button
-            onClick={onViewDetails}
             className="
-              text-blue-600
-              hover:text-blue-700
-              text-sm
-              font-medium
+              w-9
+              h-9
+              rounded-xl
+              bg-blue-50
+              hover:bg-blue-100
+              flex
+              items-center
+              justify-center
+              transition-all
             "
           >
-            <Eye size={16} />
+            <Eye
+              size={18}
+              className="text-blue-600"
+            />
           </button>
 
           <div className="flex gap-3">
@@ -357,23 +397,47 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
             <button
               onClick={onToggleStatus}
               className="
-                text-gray-400
-                hover:text-green-600
-                transition-colors
+                w-9
+                h-9
+                rounded-xl
+                bg-emerald-50
+                hover:bg-emerald-100
+                flex
+                items-center
+                justify-center
+                transition-all
               "
             >
-              {incident.status === 'открыт' ? '✅' : '🔓'}
+              {incident.status === 'открыт' ? (
+                <CheckCircle2
+                  size={18}
+                  className="text-emerald-600"
+                />
+              ) : (
+                <LockOpen
+                  size={18}
+                  className="text-emerald-600"
+                />
+              )}
             </button>
 
             <button
-              onClick={onDelete}
               className="
-                text-gray-400
-                hover:text-red-600
-                transition-colors
+                w-9
+                h-9
+                rounded-xl
+                bg-red-50
+                hover:bg-red-100
+                flex
+                items-center
+                justify-center
+                transition-all
               "
             >
-              <Trash2 size={16} />
+              <Trash2
+                size={18}
+                className="text-red-600"
+              />
             </button>
 
           </div>
