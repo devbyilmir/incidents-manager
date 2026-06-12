@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
@@ -9,9 +9,24 @@ from app.incidents.risk import calculate_risk
 from app.users.permissions import require_master_or_admin, require_admin
 from app.incidents.recommendations import get_recommendation
 from datetime import datetime
+from app.websocket_manager import manager
 
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
+
+
+@router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+
+    await manager.connect(websocket)
+
+    try:
+
+        while True:
+            await websocket.receive_text()
+
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
 
 
 @router.get("/", response_model=list[schemas.IncidentResponse])
@@ -315,9 +330,18 @@ async def create_incident(
     )
 
     incident_with_creator = result.scalar_one_or_none()
+
     incident_with_creator.recommendation = get_recommendation(
         incident_with_creator.risk_score
     )
+
+    await manager.broadcast(
+        "incident_created",
+        {
+            "incident_id": incident_with_creator.id
+        }
+    )
+
     return incident_with_creator
 
 
@@ -348,6 +372,14 @@ async def update_incident_status(
 
     await db.commit()
     await db.refresh(incident)
+
+    await manager.broadcast(
+        "incident_updated",
+        {
+            "incident_id": incident.id,
+            "status": incident.status
+        }
+    )
     return incident
 
 
@@ -368,4 +400,11 @@ async def delete_incident(
 
     await db.delete(incident)
     await db.commit()
+
+    await manager.broadcast(
+        "incident_deleted",
+        {
+            "incident_id": incident_id
+        }
+    )
     return {"message": "Инцидент удален"}

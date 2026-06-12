@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Toaster } from "react-hot-toast";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { WebSocketProvider } from "./providers/WebSocketProvider";
 import { queryClient } from "./queryClient";
 import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/500.css';
@@ -18,20 +19,24 @@ root.render(
 
     <QueryClientProvider client={queryClient}>
 
-      <App />
+      <WebSocketProvider>
 
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: "rgba(255,255,255,0.9)",
-            backdropFilter: "blur(20px)",
-            borderRadius: "18px",
-            border: "1px solid rgba(255,255,255,0.5)"
-          }
-        }}
-      />
+        <App />
+
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(20px)",
+              borderRadius: "18px",
+              border: "1px solid rgba(255,255,255,0.5)"
+            }
+          }}
+        />
+
+      </WebSocketProvider>
 
     </QueryClientProvider>
 
