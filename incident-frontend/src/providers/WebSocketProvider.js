@@ -5,7 +5,6 @@ import {
 } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 
 const WebSocketContext = createContext(null);
 
@@ -24,11 +23,7 @@ export const WebSocketProvider = ({ children }) => {
         );
 
         socket.onopen = () => {
-        console.log("WS connected");
-
-        toast.success(
-            "Realtime подключен"
-        );
+            console.log("WS connected");
         };
 
         socket.onmessage = (event) => {
@@ -39,10 +34,6 @@ export const WebSocketProvider = ({ children }) => {
         switch (data.type) {
 
             case "incident_created":
-
-            toast.success(
-                "Создан новый инцидент"
-            );
 
             queryClient.invalidateQueries({
                 queryKey: ["incidents"]
@@ -56,10 +47,6 @@ export const WebSocketProvider = ({ children }) => {
 
             case "incident_updated":
 
-            toast(
-                "Статус инцидента обновлен"
-            );
-
             queryClient.invalidateQueries({
                 queryKey: ["incidents"]
             });
@@ -71,10 +58,6 @@ export const WebSocketProvider = ({ children }) => {
             break;
 
             case "incident_deleted":
-
-            toast.error(
-                "Инцидент удален"
-            );
 
             queryClient.invalidateQueries({
                 queryKey: ["incidents"]

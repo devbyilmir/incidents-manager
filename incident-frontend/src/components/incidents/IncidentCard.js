@@ -89,18 +89,6 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
           </h3>
 
           <div className="flex items-center gap-2 ml-3">
-            <div
-              className={`
-                px-2
-                py-1
-                rounded-xl
-                text-[10px]
-                font-bold
-                ${getRiskColor(incident.risk_level)}
-              `}
-            >
-              {incident.risk_level}
-            </div>
 
             <span
               className={`
@@ -133,22 +121,15 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
           <div>
 
             <div
-              className={`
+              className="
                 text-xs
                 uppercase
                 tracking-wider
                 font-semibold
-
-                ${
-                  incident.risk_level === "HIGH"
-                    ? "text-red-500"
-                    : incident.risk_level === "MEDIUM"
-                    ? "text-amber-500"
-                    : "text-emerald-500"
-                }
-              `}
+                text-slate-500
+              "
             >
-              Risk Level
+              Risk Score
             </div>
 
             <div className="text-3xl font-bold text-slate-900">
@@ -196,7 +177,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
               items-center
               justify-center
               font-bold
-              text-sm
+              text-xs
               border-4
 
               ${

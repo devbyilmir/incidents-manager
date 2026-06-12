@@ -23,7 +23,12 @@ const RecentActivity = ({ incidents = [] }) => {
       </h3>
 
       <div className="space-y-5">
-        {console.log("ACTIVITY INCIDENTS", incidents)}
+        {console.log(
+          incidents.map(i => ({
+            title: i.title,
+            risk: i.risk_level
+          }))
+        )}
 
         {[...incidents]
           .sort(
@@ -33,6 +38,11 @@ const RecentActivity = ({ incidents = [] }) => {
           )
           .slice(0, 5)
           .map((incident) => (
+
+            console.log(
+              incident.title,
+              incident.risk_level
+            ),
 
             <div
               key={incident.id}
