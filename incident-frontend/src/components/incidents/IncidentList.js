@@ -4,35 +4,20 @@ import IncidentCard from './IncidentCard';
 import IncidentDetailsModal from './IncidentDetailsModal';
 import toast from "react-hot-toast";
 import {
-  useQuery,
   useMutation,
   useQueryClient
 } from "@tanstack/react-query";
 
+import { useIncidents } from "../../hooks/useIncidents";
+
 
 const IncidentList = ({ refreshTrigger }) => {
   const {
-    data: incidents = [],
-    isLoading: loading,
-    error,
-    refetch
-  } = useQuery({
-    queryKey: ["incidents"],
-    queryFn: async () => {
-      const response = await fetch(
-        "http://localhost:8000/incidents/",
-        {
-          credentials: "include"
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Ошибка загрузки инцидентов");
-      }
-
-      return response.json();
-    }
-  });
+  data: incidents = [],
+  isLoading: loading,
+  error,
+  refetch
+} = useIncidents();
 
   const queryClient = useQueryClient();
   const deleteIncidentMutation = useMutation({
