@@ -109,14 +109,6 @@ export default function DashboardCharts({
 
       </div>
 
-      {/* <div className="2xl:col-span-2 row-span-2">
-
-        <RecentActivity incidents={incidents} />
-
-      </div> */}
-
-      {/* Types Chart */}
-
       <div
         className="
           bg-white/60

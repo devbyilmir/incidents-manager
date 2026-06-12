@@ -29,13 +29,13 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 2xl:grid-cols-5 gap-6">
+    <div className="grid grid-cols-1 2xl:grid-cols-5 gap-6 items-stretch">
 
       <div className="2xl:col-span-4">
         <IncidentStats />
       </div>
 
-      <div>
+      <div className="h-full">
         <RecentActivity incidents={incidents} />
       </div>
 

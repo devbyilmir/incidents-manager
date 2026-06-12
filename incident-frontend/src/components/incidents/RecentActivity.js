@@ -4,7 +4,7 @@ const RecentActivity = ({ incidents = [] }) => {
   return (
     <div
       className="
-        max-h-[700px]
+        max-h-[650px]
         overflow-y-auto
         sticky
         top-24
