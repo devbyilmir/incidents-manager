@@ -10,23 +10,6 @@ import {
 
 
 const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => {
-  const getPriorityIcon = (priority) => {
-    switch (priority) {
-      case 'критический':
-        return '';
-        return '🔴';
-      case 'высокий':
-        return '';
-        return '🟠';
-      case 'средний':
-        return '';
-        return '🟡';
-      default:
-        return '';
-        return '🟢';
-    }
-  };
-
   const getRiskColor = (riskLevel) => {
     switch (riskLevel) {
       case 'HIGH':
@@ -58,20 +41,19 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
 
         ${
           incident.status === 'закрыт'
-          ? 'border-green-200'
-            // : 'hover:-translate-y-2 hover:shadow-2xl'
+            ? 'border-slate-200 opacity-90'
             : 'hover:scale-[1.02] hover:shadow-[0_20px_60px_rgba(99,102,241,0.18)]'
         }
       `}
     >
-      {incident.status === 'закрыт' && (
+      {/* {incident.status === 'закрыт' && (
         <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-400/5 pointer-events-none" />
-      )}
+      )} */}
 
       <div
         className={`h-2 ${
           incident.status === 'закрыт'
-            ? 'bg-gradient-to-r from-gray-400 to-gray-500'
+            ? 'bg-gradient-to-r from-slate-400 to-slate-500'
             : incident.priority === 'критический'
             ? 'bg-gradient-to-r from-red-500 to-red-600'
             : incident.priority === 'высокий'
@@ -97,7 +79,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
 
               ${
                 incident.status === 'закрыт'
-                  ? 'text-gray-500 line-through'
+                  ? 'text-slate-600'
                   : 'text-gray-900 group-hover:text-blue-600'
               }
             `}
@@ -106,11 +88,6 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
           </h3>
 
           <div className="flex items-center gap-2 ml-3">
-
-            <span className="text-lg">
-              {getPriorityIcon(incident.priority)}
-            </span>
-
             <div
               className={`
                 px-2
@@ -281,7 +258,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
             🏷️ {incident.type}
           </span>
 
-          <span
+          {/* <span
             className={`
               inline-flex
               items-center
@@ -300,9 +277,30 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
                   : 'bg-gray-100 text-gray-700 border-gray-200'
               }
             `}
-          >
-            {incident.status}
-          </span>
+          > */}
+            <span
+              className={`
+                px-3
+                py-1
+                rounded-xl
+                text-xs
+                font-bold
+
+                ${
+                  incident.status === "открыт"
+                    ? "bg-emerald-100 text-emerald-700"
+                    : incident.status === "в работе"
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-slate-200 text-slate-700"
+                }
+              `}
+            >
+              {incident.status === "закрыт"
+                ? "✓ Закрыт"
+                : incident.status === "открыт"
+                ? "● Открыт"
+                : "◐ В работе"}
+            </span>
 
         </div>
 
@@ -374,6 +372,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
         <div className="flex justify-between items-center">
 
           <button
+            onClick={onViewDetails}
             className="
               w-9
               h-9
@@ -422,6 +421,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
             </button>
 
             <button
+              onClick={onDelete}
               className="
                 w-9
                 h-9

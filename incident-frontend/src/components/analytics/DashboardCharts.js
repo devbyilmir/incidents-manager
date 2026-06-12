@@ -11,11 +11,23 @@ import {
 } from "recharts";
 // import RecentActivity from "../incidents/RecentActivity";
 
-const COLORS = [
-  "#22c55e",
-  "#f59e0b",
-  "#ef4444",
-];
+// const COLORS = [
+//   "#22c55e",
+//   "#f59e0b",
+//   "#ef4444",
+// ];
+const getRiskColor = (risk) => {
+  switch (risk) {
+    case "HIGH":
+      return "#ef4444";
+
+    case "MEDIUM":
+      return "#f59e0b";
+
+    default:
+      return "#22c55e";
+  }
+};
 
 export default function DashboardCharts({
   riskDistribution,
@@ -42,35 +54,57 @@ export default function DashboardCharts({
           Risk Distribution
         </h3>
 
-        <div className="h-[300px]">
+        <div className="h-[300px] flex items-center">
 
-          <ResponsiveContainer width="100%" height="100%">
+          <div className="w-36 space-y-4">
 
-            <PieChart>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-sm">High</span>
+            </div>
 
-              <Pie
-                data={riskDistribution}
-                dataKey="count"
-                nameKey="risk_level"
-                innerRadius={70}
-                outerRadius={100}
-              >
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-yellow-500" />
+              <span className="text-sm">Medium</span>
+            </div>
 
-                {riskDistribution.map((entry, index) => (
-                  <Cell
-                    key={index}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="text-sm">Low</span>
+            </div>
 
-              </Pie>
+          </div>
 
-              <Tooltip />
+          <div className="flex-1 h-full">
 
-            </PieChart>
+            <ResponsiveContainer width="100%" height="100%">
 
-          </ResponsiveContainer>
+              <PieChart>
 
+                <Pie
+                  data={riskDistribution}
+                  dataKey="count"
+                  nameKey="risk_level"
+                  innerRadius={70}
+                  outerRadius={100}
+                >
+
+                  {riskDistribution.map((entry, index) => (
+                    <Cell
+                      key={index}
+                      fill={getRiskColor(entry.risk_level)}
+                    />
+                  ))}
+
+                </Pie>
+
+                <Tooltip />
+
+              </PieChart>
+
+            </ResponsiveContainer>
+          
+          </div>
         </div>
 
       </div>
@@ -104,6 +138,29 @@ export default function DashboardCharts({
 
             <BarChart data={incidentTypes}>
 
+              <defs>
+
+                <linearGradient
+                  id="incidentGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="#8b5cf6"
+                  />
+
+                  <stop
+                    offset="100%"
+                    stopColor="#3b82f6"
+                  />
+
+                </linearGradient>
+
+              </defs>
+
               <XAxis dataKey="type" />
 
               <YAxis />
@@ -112,7 +169,8 @@ export default function DashboardCharts({
 
               <Bar
                 dataKey="count"
-                radius={[8, 8, 0, 0]}
+                fill="url(#incidentGradient)"
+                radius={[12, 12, 0, 0]}
               />
 
             </BarChart>
