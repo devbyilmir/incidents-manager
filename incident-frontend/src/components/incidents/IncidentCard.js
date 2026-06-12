@@ -5,7 +5,8 @@ import {
   Eye,
   Trash2,
   CheckCircle2,
-  LockOpen
+  LockOpen,
+  PlayCircle
 } from "lucide-react";
 
 
@@ -395,6 +396,13 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
 
             <button
               onClick={onToggleStatus}
+              title={
+                incident.status === "открыт"
+                  ? "Взять в работу"
+                  : incident.status === "в работе"
+                  ? "Закрыть инцидент"
+                  : "Переоткрыть инцидент"
+              }
               className="
                 w-9
                 h-9
@@ -407,7 +415,12 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
                 transition-all
               "
             >
-              {incident.status === 'открыт' ? (
+              {incident.status === "открыт" ? (
+                <PlayCircle
+                  size={18}
+                  className="text-blue-600"
+                />
+              ) : incident.status === "в работе" ? (
                 <CheckCircle2
                   size={18}
                   className="text-emerald-600"
@@ -415,7 +428,7 @@ const IncidentCard = ({ incident, onViewDetails, onDelete, onToggleStatus }) => 
               ) : (
                 <LockOpen
                   size={18}
-                  className="text-emerald-600"
+                  className="text-orange-600"
                 />
               )}
             </button>

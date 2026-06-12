@@ -115,10 +115,17 @@ const IncidentList = ({ refreshTrigger }) => {
     currentStatus
   ) => {
 
-    const newStatus =
-      currentStatus === "открыт"
-        ? "закрыт"
-        : "открыт";
+    let newStatus;
+
+    if (currentStatus === "открыт") {
+      newStatus = "в работе";
+    }
+    else if (currentStatus === "в работе") {
+      newStatus = "закрыт";
+    }
+    else {
+      newStatus = "открыт";
+    }
 
     updateStatusMutation.mutate({
       incidentId,
